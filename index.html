@@ -30,6 +30,9 @@ header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-betwe
 .brand .b2{color:var(--orange)}
 .brand small{font-weight:700;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--line);padding:3px 8px;border-radius:20px}
 .head-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.branch-sel{background:var(--card);border:1px solid var(--orange);color:var(--orange2);border-radius:20px;
+  padding:8px 12px;font-weight:800;font-size:13px;font-family:inherit;cursor:pointer;outline:none}
+.branch-sel:hover{filter:brightness(1.15)}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;padding:7px 12px;border-radius:20px;border:1px solid var(--line);background:var(--card);cursor:default}
 .pill.fire{color:#ffb066;border-color:#6b3a12}
 .pill.ok{color:#8fe3a1;border-color:#2f5c3a}
@@ -182,7 +185,7 @@ tr:last-child td{border-bottom:none}
 /* ---------- Модалки ---------- */
 .modal-back{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
 .modal-back.open{display:flex}
-.modal{background:linear-gradient(180deg,#241e17,#1a1611);border:1px solid #4a4034;border-radius:20px;max-width:620px;width:100%;max-height:88vh;overflow:auto;padding:24px}
+.modal{background:linear-gradient(180deg,#241e17,#1a1611);border:1px solid #4a4034;border-radius:20px;max-width:640px;width:100%;max-height:88vh;overflow:auto;padding:24px}
 .modal h2{font-size:20px;font-weight:900;margin-bottom:4px}
 .mdate{color:var(--muted);font-size:13px;margin-bottom:16px;text-transform:capitalize}
 .shift-hero{background:linear-gradient(180deg,#ff8c1a,#ff6400);border-radius:16px;padding:16px;text-align:center;margin-bottom:16px;box-shadow:0 8px 26px rgba(255,106,0,.35)}
@@ -201,10 +204,58 @@ tr:last-child td{border-bottom:none}
 .arc-item{background:#211c16;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
 .arc-item .tsub{display:block;margin-top:3px}
 
-/* ---------- Отчёт ---------- */
-.report-wrap{background:#120f0c;border:1px solid var(--line);border-radius:12px;padding:14px;max-height:46vh;overflow:auto}
-#reportText{font-family:'Consolas','Menlo','Courier New',monospace;font-size:12.5px;line-height:1.55;white-space:pre-wrap;color:#e8ddcd;margin:0}
+/* ---------- Отчёт: таблица заказов ---------- */
+.report-wrap{background:#120f0c;border:1px solid var(--line);border-radius:12px;padding:12px;max-height:48vh;overflow:auto;margin-bottom:12px}
+.rep-table{width:100%;border-collapse:collapse;font-size:13px}
+.rep-table th{color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:1px;padding:6px 8px;border:1px solid #2a241e;text-align:left}
+.rep-table td{border:1px solid #2a241e;padding:8px 10px;vertical-align:top}
+.rep-table .ord-cell{white-space:nowrap;width:1%}
+.rep-table .ord-cell .onum{font-weight:900;color:var(--orange2);font-size:15px}
+.rep-table .ord-cell .osub{font-size:11px;color:var(--muted);line-height:1.5;margin-top:2px}
+.rep-table .ord-cell .osum{font-weight:900;font-size:13.5px;margin-top:3px}
+.burger-line{margin:3px 0;white-space:nowrap}
+.burger-line b{color:var(--orange2);display:inline-block;min-width:22px}
+.burger-line .bn{font-weight:700}
+.burger-line .bnote{color:#ffc06a;font-size:11px;font-style:italic}
+.extra-line{margin:3px 0;color:#d8cbb8;white-space:nowrap}
+.extra-line .eq{color:var(--orange2);font-weight:800}
+.extra-line .bnote{color:#ffc06a;font-size:11px;font-style:italic}
+.rep-none{color:var(--muted)}
+.rep-total td{background:#241d14;font-weight:900;border-top:2px solid var(--orange)}
+.rep-total .tbig{color:var(--orange2);font-size:16px}
+.report-pre{font-family:'Consolas','Menlo','Courier New',monospace;font-size:12.5px;line-height:1.55;white-space:pre-wrap;color:#e8ddcd;margin:0}
+.report-textarea{width:100%;background:#120f0c;border:1px solid var(--line);color:#e8ddcd;
+  font-family:'Consolas','Menlo','Courier New',monospace;font-size:12.5px;line-height:1.55;
+  padding:12px;border-radius:12px;min-height:220px;resize:vertical;outline:none}
+.report-textarea:focus{border-color:var(--orange)}
 .report-hint{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+
+/* ---------- Заказ продуктов ---------- */
+.branch-radios{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.branch-radios label{flex:1;min-width:140px;display:flex;align-items:center;gap:10px;border:1px solid #4a4034;background:#262019;
+  border-radius:12px;padding:13px 14px;cursor:pointer;font-weight:800;font-size:14px;transition:.12s}
+.branch-radios label:hover{border-color:var(--orange)}
+.branch-radios label.sel{border-color:var(--orange);background:#33271a;box-shadow:0 3px 12px rgba(255,106,0,.2)}
+.branch-radios input{accent-color:var(--orange);width:18px;height:18px;flex:none}
+.target-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:16px;background:#211c16;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.target-date{font-weight:900;font-size:15px;color:var(--orange2);text-align:center;line-height:1.35}
+.target-date small{display:block;font-weight:600;color:var(--muted);font-size:10.5px;letter-spacing:.2px}
+.ord-groups{display:flex;flex-direction:column;gap:16px}
+.ord-group h4{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:9px;display:flex;align-items:center;gap:8px}
+.ord-group h4 .cnt{font-size:11px;color:var(--orange2);border:1px solid #4a3a22;border-radius:12px;padding:2px 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid #4a4034;background:#262019;color:var(--text);border-radius:20px;padding:9px 15px;font-size:13px;font-weight:700;cursor:pointer;transition:.12s;user-select:none}
+.chip:hover{border-color:var(--orange)}
+.chip.sel{background:linear-gradient(180deg,#ff8c1a,#ff6400);border-color:transparent;color:#fff;box-shadow:0 3px 12px rgba(255,106,0,.35)}
+.sel-notes{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.snote-row{display:flex;align-items:center;gap:8px;background:#1a1611;border:1px dashed #4a3a22;border-radius:10px;padding:6px 10px}
+.snote-name{font-size:12.5px;font-weight:800;color:var(--orange2);white-space:nowrap}
+.snote-input{flex:1;min-width:0;background:#120f0c;border:1px solid var(--line);color:#fff;border-radius:8px;padding:6px 9px;font-size:12.5px;outline:none;font-family:inherit}
+.snote-input:focus{border-color:var(--orange)}
+.ord-count{margin-top:14px;font-size:13px;font-weight:800;color:var(--muted)}
+.ord-count b{color:var(--orange2);font-size:15px}
+#ordReportBox{display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
+#ordReportBox.open{display:block}
 
 /* ---------- Уведомление (toast) ---------- */
 #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(150px);
@@ -234,6 +285,7 @@ tr:last-child td{border-bottom:none}
   .brand{display:none}
   .save-ind{font-size:0;gap:0;padding:9px 9px}
   .pill{padding:6px 9px}
+  .branch-sel{padding:8px 10px;font-size:12px}
   .clock{text-align:center;line-height:1.2}
   .clock .d{display:none}
   .clock .dshort{display:block}
@@ -241,17 +293,19 @@ tr:last-child td{border-bottom:none}
   .btn{padding:9px 11px;border-radius:10px;font-size:16px}
   .btn .btn-txt{display:none}
   #toast{bottom:120px}
+  .rep-table .ord-cell .osub{display:none}
 }
 @media print{
   body *{visibility:hidden}
   .modal-back.open,.modal-back.open *{visibility:visible}
   .modal-back.open{position:absolute;inset:0;background:#fff}
   .modal{background:#fff;color:#000;border:none}
-  .shift-hero{background:none;border:2px solid #000;box-shadow:none}
-  .shift-hero .v,.shift-cell .v{color:#000}
-  .modal-actions,#archiveBox{display:none!important}
-  #reportText{color:#000!important}
+  .rep-table{color:#000}
+  .rep-table th,.rep-table td{border-color:#000}
+  .rep-table .ord-cell .onum,.rep-table .ord-cell .osum,.burger-line b,.burger-line .bn,.extra-line .eq,.rep-total .tbig{color:#000}
+  .report-pre,.report-textarea{color:#000!important;border:1px solid #000}
   .report-wrap{border:1px solid #000;max-height:none}
+  .modal-actions,#archiveBox{display:none!important}
 }
 </style>
 </head>
@@ -260,6 +314,10 @@ tr:last-child td{border-bottom:none}
 <header>
   <div class="brand">🔥 ТОТ<span class="b2">БУРГЕР</span><small>касса</small></div>
   <div class="head-right">
+    <select class="branch-sel" id="branchSel" title="Филиал (попадает во все отчёты)">
+      <option value="202-й">🏬 202-й</option>
+      <option value="Дежнева">🏬 Дежнева</option>
+    </select>
     <span class="save-ind" id="saveInd" title="Данные автоматически сохраняются"><span class="dot"></span>…</span>
     <span class="pill fire" title="Заказы на кухне">🔥 <b id="pillPrep">0</b></span>
     <span class="pill ok" title="Выполнено за смену">✅ <b id="pillDone">0</b></span>
@@ -342,12 +400,14 @@ tr:last-child td{border-bottom:none}
 
   <!-- СТАТИСТИКА -->
   <section class="panel">
-    <h2 class="sec-title">📊 СТАТИСТИКА СМЕНЫ <span class="hint">— считаются только отданные заказы · бургеры по штукам, остальное по деньгам</span></h2>
+    <h2 class="sec-title">📊 СТАТИСТИКА СМЕНЫ · <span id="statBranch" style="color:var(--orange2)">🏬 —</span>
+      <span class="hint">— считаются только отданные заказы · бургеры по штукам, остальное по деньгам</span></h2>
     <div class="stat-cards" id="statCards"></div>
     <div class="shift-btn-row">
       <div class="storage-note">💾 Данные хранятся в этом браузере и не пропадут при закрытии сайта.<br>Для страховки (или переноса на другое устройство) — кнопка «💾 Бэкап».</div>
       <div class="stat-actions">
         <button class="btn green" id="reportBtn">📋 Отчёт для отправки</button>
+        <button class="btn green" id="orderBtn">🛒<span class="btn-txt"> Заказать продукты на завтра</span></button>
         <button class="btn primary" id="sumBtn">💰 Сформировать общую сумму продаж</button>
       </div>
     </div>
@@ -360,7 +420,7 @@ tr:last-child td{border-bottom:none}
     <h2>📊 Итоги смены</h2>
     <div class="mdate" id="shiftDate"></div>
     <div class="shift-hero">
-      <div class="l">ОБЩАЯ СУММА ПРОДАЖ</div>
+      <div class="l" id="shiftHeroLabel">ОБЩАЯ СУММА ПРОДАЖ</div>
       <div class="v" id="shiftTotal">0 ₽</div>
     </div>
     <div class="shift-grid" id="shiftGrid"></div>
@@ -383,13 +443,55 @@ tr:last-child td{border-bottom:none}
   <div class="modal">
     <h2>📋 Отчёт по продажам</h2>
     <div class="mdate" id="reportDate"></div>
-    <div class="report-wrap"><pre id="reportText"></pre></div>
-    <div class="report-hint">💡 «Скопировать» → вставь текст в WhatsApp / Telegram руководителю. На телефоне можно жать «Поделиться» — откроется меню отправки.</div>
+    <div class="report-wrap">
+      <table class="rep-table" id="reportTable">
+        <thead><tr><th>Заказ</th><th>🍔 Бургеры (по номерам)</th><th>🍟 Остальное из заказа</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="report-wrap"><pre class="report-pre" id="reportSummary"></pre></div>
+    <div class="report-hint">💡 «Скопировать» → вставь текст в WhatsApp / Telegram. На телефоне можно «Поделиться».</div>
     <div class="modal-actions">
       <button class="btn green" id="reportCopyBtn">📋 Скопировать</button>
       <button class="btn" id="reportShareBtn">📤 Поделиться</button>
       <button class="btn" id="reportPrintBtn">🖨 Печать</button>
       <button class="btn" id="reportCloseBtn">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- ЗАКАЗ ПРОДУКТОВ -->
+<div class="modal-back" id="orderBack">
+  <div class="modal">
+    <h2>🛒 Заказать продукты</h2>
+    <div class="mdate">Список на следующую смену · не зависит от смены и её закрытия</div>
+
+    <div class="branch-radios" id="orderBranchRadios">
+      <label><input type="radio" name="ordBranch" value="202-й">🏬 202-й</label>
+      <label><input type="radio" name="ordBranch" value="Дежнева">🏬 Дежнева</label>
+    </div>
+
+    <div class="target-row">
+      <button class="icon-btn" id="ordPrevDay" title="Днём раньше">◀</button>
+      <div class="target-date" id="ordTargetDate">—</div>
+      <button class="icon-btn" id="ordNextDay" title="Днём позже">▶</button>
+    </div>
+
+    <div class="ord-groups" id="ordGroups"></div>
+    <div class="ord-count" id="ordCount">Выбрано: <b>0</b> позиций</div>
+
+    <div id="ordReportBox">
+      <h3 style="font-size:15px;font-weight:900;margin-bottom:10px">📄 Заявка готова (можно редактировать):</h3>
+      <textarea id="ordReportText" class="report-textarea" spellcheck="false"></textarea>
+      <div class="report-hint">💡 Пиши уточнения прямо в поле (например: «Напитки — пепси, 2 упак»). Кнопка «Сформировать заявку» пересоберёт текст заново.</div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn green" id="ordFormBtn">📋 Сформировать заявку</button>
+      <button class="btn green" id="ordCopyBtn" style="display:none">📋 Скопировать</button>
+      <button class="btn" id="ordShareBtn" style="display:none">📤 Поделиться</button>
+      <button class="btn danger" id="ordClearBtn">🧹 Очистить список</button>
+      <button class="btn" id="ordCloseBtn">Закрыть</button>
     </div>
   </div>
 </div>
@@ -401,35 +503,42 @@ tr:last-child td{border-bottom:none}
 const LS_KEY      = 'tot-burger-cash-v1';
 const LS_BACKUP   = 'tot-burger-cash-backup-v1';
 const ARC_KEY     = 'tot-burger-archive-v1';
+const ORD_KEY     = 'tot-burger-order-v1';
+const CUTOFF_HOUR = 5;   // до 5:00 утра считаем, что ещё идёт предыдущий рабочий день
 
 /* ================= МЕНЮ ================= */
 const MENU = [
-  // Бургеры (учёт количества)
   {id:'firm',    type:'burger', name:'ТОТ САМЫЙ ФИРМЕННЫЙ', short:'Фирменный', price:690, weight:'460 г', emoji:'🍔', tag:'⭐',  color:'#ff7a00'},
   {id:'cheese',  type:'burger', name:'ТОТ САМЫЙ СЫРНЫЙ',    short:'Сырный',    price:640, weight:'460 г', emoji:'🍔', tag:'🧀', color:'#ffc63a'},
   {id:'double',  type:'burger', name:'ТОТ БУРГЕР',          short:'Тот Бургер',price:790, weight:'550 г', emoji:'🍔', tag:'2×', color:'#ff4d1f'},
   {id:'hot',     type:'burger', name:'ТОТ САМЫЙ ОСТРЫЙ',    short:'Острый',    price:700, weight:'470 г', emoji:'🍔', tag:'🌶️', color:'#ff2e2e'},
   {id:'classic', type:'burger', name:'ТОТ САМЫЙ',           short:'Тот Самый', price:590, weight:'400 г', emoji:'🍔', tag:'🔥', color:'#ffb03a'},
   {id:'honey',   type:'burger', name:'ТОТ САМЫЙ МЕДОВЫЙ',   short:'Медовый',   price:640, weight:'440 г', emoji:'🍔', tag:'🍯', color:'#e8a51f'},
-  // Фри (только деньги)
   {id:'fries',   type:'extra', cat:'fries', name:'Картошка фри',    price:200, weight:'150 г', emoji:'🍟'},
   {id:'frais',   type:'extra', cat:'fries', name:'Фрайс с беконом', price:350, weight:'260 г', emoji:'🥓'},
-  // Напитки (только деньги)
   {id:'cola',    type:'extra', cat:'drink', name:'Кола 0,33',   price:130, emoji:'🥤', color:'#e02f2f'},
   {id:'sprite',  type:'extra', cat:'drink', name:'Спрайт 0,33', price:130, emoji:'🥤', color:'#2fae4f'},
   {id:'energy',  type:'extra', cat:'drink', name:'Энергетик',   price:180, emoji:'⚡'},
-  // Соусы (только деньги)
   {id:'sau_cheese',  type:'extra', cat:'sauce', name:'Соус сырный',        price:30, weight:'25 г', emoji:'🧀'},
   {id:'sau_ketchup', type:'extra', cat:'sauce', name:'Соус кетчуп',        price:30, weight:'25 г', emoji:'🍅'},
   {id:'sau_bbq',     type:'extra', cat:'sauce', name:'Соус барбекю',       price:30, weight:'25 г', emoji:'🍖'},
   {id:'sau_sweet',   type:'extra', cat:'sauce', name:'Соус кисло-сладкий', price:30, weight:'25 г', emoji:'🥢'},
 ];
 
-/* ================= СОСТОЯНИЕ ================= */
+/* ================= СПИСОК ПРОДУКТОВ ДЛЯ ЗАКАЗА ================= */
+const ORDER_LIST = [
+  {group:'food',   icon:'🥩', title:'Продукты',   items:['Булочка','Фарш','Картошка фри','Помидоры','Капуста','Лук','Огурцы','Сыр','Зелень','Чеснок','Бекон']},
+  {group:'drinks', icon:'🥤', title:'Напитки',    items:['Кола 0,33','Спрайт 0,33','Энергетик']},
+  {group:'sauce',  icon:'🥣', title:'Соусы',      items:['Сырный соус','Барбекю','Кетчуп','Майонез','Сметана','Кисло сладкий','Мед']},
+  {group:'suppl',  icon:'🧻', title:'Расходники / Хозтовары', items:['Напитки','Салфетки','Перчатки рабочие','Перчатки для гостей','Бумага для чека','Упаковка фрайс','Упаковка картошки','Кофе','Чай','Молоко','Сахар','Соль','Перец','Ложки','Вилки','Зубочистки','Скобы для степлера','Губки','Моющие средства','Мусорные мешки','Целофановые пакеты','Пергамент','Фольга','Большие пакеты','Маленькие пакеты','Вода']},
+];
+
+/* ================= СОСТОЯНИЕ СМЕНЫ ================= */
 function defaultState(){
   return {
     orderSeq: 1,
-    startedAt: Date.now(),                           // открытие смены
+    branch: '202-й',
+    startedAt: Date.now(),
     lastSaved: null,
     current: { num:null, items:{}, payment:null },
     preparing: [],
@@ -447,7 +556,7 @@ function loadState(){
       if(parsed && typeof parsed === 'object' && 'completed' in parsed){
         return Object.assign(defaultState(), parsed);
       }
-    }catch(e){ /* пробуем следующий ключ */ }
+    }catch(e){}
   }
   return null;
 }
@@ -465,6 +574,35 @@ function loadArchive(){ try{ return JSON.parse(localStorage.getItem(ARC_KEY) || 
 function saveArchive(){ try{ localStorage.setItem(ARC_KEY, JSON.stringify(ARC)); }catch(e){} }
 let ARC = loadArchive();
 
+/* ---- Состояние заказа продуктов (независимо от смены) ---- */
+function loadOrd(){
+  try{
+    const raw = localStorage.getItem(ORD_KEY);
+    if(!raw) return null;
+    const o = JSON.parse(raw);
+    if(o && typeof o === 'object'){
+      // миграция старых объединённых позиций
+      const M = {
+        'p_Перчатки раб/клиент':   ['p_Перчатки рабочие'],
+        'p_Упаковка фрайс/картошки': ['p_Упаковка фрайс','p_Упаковка картошки']
+      };
+      if(!o.selected) o.selected = {};
+      Object.keys(M).forEach(old => {
+        if(o.selected[old]){
+          delete o.selected[old];
+          M[old].forEach(nw => o.selected[nw] = true);
+        }
+      });
+      if(!o.notes) o.notes = {};
+      if(!('targetISO' in o)) o.targetISO = null;
+      if(!o.branch) o.branch = '202-й';
+    }
+    return o;
+  }catch(e){ return null; }
+}
+let ORD = loadOrd() || { branch: S.branch || '202-й', selected: {}, notes: {}, targetISO: null };
+function saveOrd(){ try{ localStorage.setItem(ORD_KEY, JSON.stringify(ORD)); }catch(e){} }
+
 /* ================= ХЕЛПЕРЫ ================= */
 const $ = s => document.querySelector(s);
 const item = id => MENU.find(m => m.id === id);
@@ -472,6 +610,8 @@ const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtTime = ts => new Date(ts).toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
 const rub = n => n.toLocaleString('ru-RU') + ' ₽';
+const fmtDate = d => d.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'});
+const weekday = d => d.toLocaleDateString('ru-RU', {weekday:'long'});
 let toastTimer;
 function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
@@ -483,6 +623,41 @@ function elapsedText(ts){
   if(m < 1) return 'только что';
   if(m < 60) return m + ' мин';
   return Math.floor(m/60) + ' ч ' + (m % 60) + ' мин';
+}
+
+/* =========================================================
+   РАБОЧИЙ ДЕНЬ: до 5:00 утра считаем «вчерашним» днём
+   ========================================================= */
+function businessDay(now = new Date()){
+  const d = new Date(now);
+  if(d.getHours() < CUTOFF_HOUR) d.setDate(d.getDate() - 1);
+  d.setHours(0,0,0,0);
+  return d;
+}
+function defaultTargetDate(){
+  const d = businessDay();
+  d.setDate(d.getDate() + 1);
+  return d;
+}
+function isoOf(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function getTargetDate(){
+  const def = defaultTargetDate();
+  if(ORD.targetISO){
+    const t = new Date(ORD.targetISO + 'T00:00:00');
+    if(!isNaN(t)){
+      if(t.getTime() >= def.getTime()) return t;
+      ORD.targetISO = null; saveOrd();
+    }
+  }
+  return def;
+}
+function setTargetDate(d){
+  const def = defaultTargetDate();
+  const dd = new Date(d); dd.setHours(0,0,0,0);
+  ORD.targetISO = (dd.getTime() === def.getTime()) ? null : isoOf(dd);
+  saveOrd();
 }
 
 /* ================= ИНДИКАТОР СОХРАНЕНИЯ ================= */
@@ -503,6 +678,14 @@ function updateSaveInd(ok = true){
 }
 window.addEventListener('beforeunload', () => { try{ save(); }catch(e){} });
 document.addEventListener('visibilitychange', () => { if(document.hidden){ try{ save(); }catch(e){} } });
+
+/* ================= ФИЛИАЛ ================= */
+ $('#branchSel').value = S.branch || '202-й';
+ $('#branchSel').addEventListener('change', e => {
+  S.branch = e.target.value;
+  save(); renderAll();
+  toast('🏬 Филиал смены: ' + S.branch);
+});
 
 /* ================= МЕНЮ: ОТРИСОВКА ================= */
 function targetGrid(m){
@@ -807,6 +990,7 @@ function burgerSalesHtml(){
 function renderStats(){
   const { revenue, burgersCount } = totals();
   const e = S.extrasRevenue;
+  $('#statBranch').textContent = '🏬 ' + (S.branch || '—');
   $('#statCards').innerHTML = `
     <div class="stat-card"><div class="v">${burgersCount}</div><div class="l">🍔 бургеров продано</div><div class="sub">${burgerSalesHtml() || 'пока 0'}</div></div>
     <div class="stat-card"><div class="v">${fmt(revenue)}</div><div class="l">💰 выручка · отдано заказов: ${S.completed.length}</div></div>
@@ -819,9 +1003,12 @@ function renderStats(){
 function openShiftModal(){
   const { revenue, byPay, burgersCount, inWorkSum } = totals();
   const e = S.extrasRevenue;
-  $('#shiftDate').textContent = new Date().toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const shiftDay = new Date(S.startedAt);
+  $('#shiftDate').textContent = `🏬 ${S.branch || '—'} · смена: ${fmtDate(shiftDay)} (${weekday(shiftDay)}) · открыта в ${fmtTime(S.startedAt)}`;
+  $('#shiftHeroLabel').textContent = 'ОБЩАЯ СУММА ПРОДАЖ · 🏬 ' + (S.branch || '—');
   $('#shiftTotal').textContent = fmt(revenue);
   $('#shiftGrid').innerHTML = `
+    <div class="shift-cell"><div class="v">${esc(S.branch || '—')}</div><div class="l">🏬 филиал</div></div>
     <div class="shift-cell"><div class="v">${fmt(byPay['Наличные'].sum)}</div><div class="l">💵 Наличные · заказов: ${byPay['Наличные'].n}</div></div>
     <div class="shift-cell"><div class="v">${fmt(byPay['Терминал'].sum)}</div><div class="l">💳 Терминал · заказов: ${byPay['Терминал'].n}</div></div>
     <div class="shift-cell"><div class="v">${fmt(byPay['Перевод'].sum)}</div><div class="l">📱 Перевод · заказов: ${byPay['Перевод'].n}</div></div>
@@ -855,7 +1042,7 @@ function renderArchive(){
     const div = document.createElement('div'); div.className = 'arc-item';
     div.innerHTML = `
       <div>
-        <b>${esc(sh.date)}</b> · ${sh.orders} зак. · 🍔 ${sh.burgers}
+        <b>🏬 ${esc(sh.branch || '—')}</b> · ${esc(sh.date)} · ${sh.orders} зак. · 🍔 ${sh.burgers}
         <span class="tsub">нал. ${sh.byPay['Наличные'].sum.toLocaleString('ru-RU')} · терм. ${sh.byPay['Терминал'].sum.toLocaleString('ru-RU')} · перев. ${sh.byPay['Перевод'].sum.toLocaleString('ru-RU')} ₽</span>
       </div>
       <div style="text-align:right">
@@ -873,11 +1060,12 @@ function renderArchive(){
 
 /* ---------- Новая смена (с архивированием) ---------- */
  $('#newShiftBtn').onclick = () => {
-  if(!confirm('Завершить смену? Текущие данные уйдут в архив, и начнётся новая смена.')) return;
+  if(!confirm(`Завершить смену (🏬 ${S.branch})? Текущие данные уйдут в архив, и начнётся новая смена.\n\nФилиал для новой смены можно поменять в шапке.`)) return;
   const t = totals(); const e = S.extrasRevenue;
   ARC.push({
     endedAt: Date.now(),
-    date: new Date().toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'}),
+    date: fmtDate(new Date(S.startedAt)),
+    branch: S.branch,
     revenue: t.revenue, orders: S.completed.length,
     burgers: t.burgersCount, burgerSales: {...S.burgerSales},
     fries: e.fries, drink: e.drink, sauce: e.sauce,
@@ -885,45 +1073,79 @@ function renderArchive(){
   });
   if(ARC.length > 60) ARC = ARC.slice(-60);
   saveArchive();
+  const keepBranch = S.branch;
   S = defaultState();
+  S.branch = keepBranch;
   save(); renderAll();
   $('#modalBack').classList.remove('open');
-  toast(`🧹 Смена завершена и сохранена в архив. Новая смена начата!`);
+  toast(`🧹 Смена в архиве. Новая смена · 🏬 ${S.branch}`);
 };
 
 /* ================= ОТЧЁТ ПО ПРОДАЖАМ ================= */
 const PAY_ICON = {'Наличные':'💵', 'Терминал':'💳', 'Перевод':'📱'};
+let lastReportText = '';
 
-function buildReport(){
+function buildReportData(){
+  let counter = 0;
+  const orders = S.completed.map(o => {
+    const burgers = [], extras = [];
+    o.items.forEach(it => {
+      if(it.type === 'burger'){
+        for(let i = 0; i < it.qty; i++){
+          counter++;
+          burgers.push({ n: counter, name: it.name, price: it.price, note: it.note || '' });
+        }
+      } else {
+        extras.push({ name: it.name, qty: it.qty, note: it.note || '' });
+      }
+    });
+    return { num:o.num, time:o.time, payment:o.payment, total:o.total, burgers, extras };
+  });
+  return { orders, burgerTotal: counter };
+}
+
+function renderReportTable(){
+  const { orders, burgerTotal } = buildReportData();
+  const t = totals();
+  const tb = $('#reportTable tbody');
+  tb.innerHTML = '';
+
+  if(!orders.length){
+    tb.innerHTML = '<tr><td colspan="3" class="rep-none" style="text-align:center;padding:20px">Заказов пока нет</td></tr>';
+  }
+  orders.forEach(o => {
+    const tr = document.createElement('tr');
+    const bHtml = o.burgers.length
+      ? o.burgers.map(b => `<div class="burger-line"><b>${b.n}.</b><span class="bn">${esc(b.name)}</span>${b.note ? ` <span class="bnote">(${esc(b.note)})</span>` : ''}</div>`).join('')
+      : '<span class="rep-none">—</span>';
+    const eHtml = o.extras.length
+      ? o.extras.map(x => `<div class="extra-line">${esc(x.name)}${x.qty > 1 ? ` <span class="eq">×${x.qty}</span>` : ''}${x.note ? ` <span class="bnote">(${esc(x.note)})</span>` : ''}</div>`).join('')
+      : '<span class="rep-none">—</span>';
+    tr.innerHTML = `
+      <td class="ord-cell">
+        <div class="onum">#${o.num}</div>
+        <div class="osub">${o.time}<br>${PAY_ICON[o.payment] || ''} ${esc(o.payment)}</div>
+        <div class="osum">${fmt(o.total)}</div>
+      </td>
+      <td>${bHtml}</td>
+      <td>${eHtml}</td>`;
+    tb.appendChild(tr);
+  });
+
+  const trow = document.createElement('tr');
+  trow.className = 'rep-total';
+  trow.innerHTML = `
+    <td class="ord-cell">ИТОГО<br><span class="tbig">${fmt(t.revenue)}</span></td>
+    <td>🍔 ${burgerTotal} бургеров</td>
+    <td>🧾 заказов: ${orders.length}</td>`;
+  tb.appendChild(trow);
+}
+
+function buildReportSummary(){
   const t = totals();
   const e = S.extrasRevenue;
-  const now = new Date();
   const L = [];
-  const DIV  = '─────────────────────';
-  const DIV2 = '═════════════════════';
-
-  L.push('🔥 ТОТ БУРГЕР — ОТЧЁТ ПО ПРОДАЖАМ');
-  L.push('📅 ' + now.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'}) +
-         ' (' + now.toLocaleDateString('ru-RU', {weekday:'long'}) + ')');
-  if(S.startedAt) L.push('⏰ Смена открыта: ' + fmtTime(S.startedAt));
-  L.push('🕒 Отчёт сформирован: ' + fmtTime(Date.now()));
-  L.push(DIV);
-
-  // --- Заказы ---
-  if(S.completed.length){
-    L.push(`🧾 ЗАКАЗЫ (${S.completed.length}):`);
-    S.completed.forEach(o => {
-      L.push(`#${o.num} · ${o.time} · ${PAY_ICON[o.payment] || ''} ${o.payment} — ${rub(o.total)}`);
-      o.items.forEach(it => {
-        L.push(`    • ${it.qty} × ${it.name} — ${rub(it.price * it.qty)}${it.note ? ` (${it.note})` : ''}`);
-      });
-    });
-  } else {
-    L.push('🧾 Заказов за смену нет');
-  }
-  L.push(DIV);
-
-  // --- Бургеры (штуки) ---
+  const DIV = '─────────────────────';
   L.push(`🍔 БУРГЕРЫ ПРОДАНО: ${t.burgersCount} шт`);
   const bEntries = Object.entries(S.burgerSales);
   if(bEntries.length){
@@ -931,40 +1153,91 @@ function buildReport(){
       const m = item(id);
       if(m) L.push(`    • ${m.name} — ${q} шт × ${m.price} ₽ = ${rub(q * m.price)}`);
     });
-  } else {
-    L.push('    —');
-  }
+  } else L.push('    —');
   L.push(DIV);
-
-  // --- Остальное (деньги) ---
   L.push('🍟 Фри и фрайс: ' + rub(e.fries));
   L.push('🥤 Напитки и энергетики: ' + rub(e.drink));
   L.push('🥣 Соусы: ' + rub(e.sauce));
   L.push(DIV);
-
-  // --- Оплата ---
   L.push('💳 ОПЛАТА:');
   L.push(`    💵 Наличные — ${rub(t.byPay['Наличные'].sum)} (${t.byPay['Наличные'].n} зак.)`);
   L.push(`    💳 Терминал — ${rub(t.byPay['Терминал'].sum)} (${t.byPay['Терминал'].n} зак.)`);
   L.push(`    📱 Перевод — ${rub(t.byPay['Перевод'].sum)} (${t.byPay['Перевод'].n} зак.)`);
-
-  // --- В работе ---
   if(S.preparing.length){
     L.push(DIV);
     L.push(`🔥 Ещё в работе: ${S.preparing.length} зак. на ${rub(t.inWorkSum)} (в итог не входят)`);
   }
-
-  // --- ИТОГ ---
-  L.push(DIV2);
+  L.push('═════════════════════');
   L.push('💰 ИТОГО ЗА СМЕНУ: ' + rub(t.revenue));
   L.push(`🧾 Заказов: ${S.completed.length} · 🍔 Бургеров: ${t.burgersCount} шт`);
+  return L.join('\n');
+}
+
+function buildReportText(){
+  const { orders, burgerTotal } = buildReportData();
+  const now = new Date();
+  const shiftDay = new Date(S.startedAt);
+  const L = [];
+  const DIV  = '─────────────────────';
+  const DIV2 = '═════════════════════';
+
+  L.push('🔥 ТОТ БУРГЕР — ОТЧЁТ ПО ПРОДАЖАМ');
+  L.push('🏬 Филиал: ' + (S.branch || '—'));
+  L.push(`📅 Дата смены: ${fmtDate(shiftDay)} (${weekday(shiftDay)})`);
+  if(S.startedAt) L.push('⏰ Смена открыта: ' + fmtTime(S.startedAt));
+  L.push(`🕒 Отчёт сформирован: ${fmtDate(now)} ${fmtTime(Date.now())}`);
+  L.push(DIV);
+
+  if(orders.length){
+    L.push(`🧾 ЗАКАЗЫ (${orders.length}):`);
+    orders.forEach(o => {
+      L.push('');
+      L.push(`ЗАКАЗ #${o.num} · ${o.time} · ${PAY_ICON[o.payment] || ''} ${o.payment} · ${rub(o.total)}`);
+      o.burgers.forEach(b => {
+        L.push(`  ${b.n}. ${b.name}${b.note ? ` (${b.note})` : ''}`);
+      });
+      o.extras.forEach(x => {
+        L.push(`  + ${x.name}${x.qty > 1 ? ` ×${x.qty}` : ''}${x.note ? ` (${x.note})` : ''}`);
+      });
+    });
+  } else {
+    L.push('🧾 Заказов за смену нет');
+  }
+  L.push(DIV);
+
+  const t = totals();
+  const e = S.extrasRevenue;
+  L.push(`🍔 БУРГЕРЫ ПРОДАНО: ${burgerTotal} шт`);
+  Object.entries(S.burgerSales).forEach(([id, q]) => {
+    const m = item(id);
+    if(m) L.push(`    • ${m.name} — ${q} шт × ${m.price} ₽ = ${rub(q * m.price)}`);
+  });
+  L.push(DIV);
+  L.push('🍟 Фри и фрайс: ' + rub(e.fries));
+  L.push('🥤 Напитки и энергетики: ' + rub(e.drink));
+  L.push('🥣 Соусы: ' + rub(e.sauce));
+  L.push(DIV);
+  L.push('💳 ОПЛАТА:');
+  L.push(`    💵 Наличные — ${rub(t.byPay['Наличные'].sum)} (${t.byPay['Наличные'].n} зак.)`);
+  L.push(`    💳 Терминал — ${rub(t.byPay['Терминал'].sum)} (${t.byPay['Терминал'].n} зак.)`);
+  L.push(`    📱 Перевод — ${rub(t.byPay['Перевод'].sum)} (${t.byPay['Перевод'].n} зак.)`);
+  if(S.preparing.length){
+    L.push(DIV);
+    L.push(`🔥 Ещё в работе: ${S.preparing.length} зак. на ${rub(t.inWorkSum)} (в итог не входят)`);
+  }
+  L.push(DIV2);
+  L.push('💰 ИТОГО ЗА СМЕНУ: ' + rub(t.revenue));
+  L.push(`🧾 Заказов: ${S.completed.length} · 🍔 Бургеров: ${burgerTotal} шт`);
 
   return L.join('\n');
 }
 
 function openReport(){
-  $('#reportDate').textContent = new Date().toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  $('#reportText').textContent = buildReport();
+  const shiftDay = new Date(S.startedAt);
+  $('#reportDate').textContent = `🏬 ${S.branch || '—'} · смена: ${fmtDate(shiftDay)} (${weekday(shiftDay)})`;
+  renderReportTable();
+  $('#reportSummary').textContent = buildReportSummary();
+  lastReportText = buildReportText();
   $('#modalBack').classList.remove('open');
   $('#reportBack').classList.add('open');
 }
@@ -975,12 +1248,11 @@ function openReport(){
  $('#reportPrintBtn').onclick = () => window.print();
 
  $('#reportCopyBtn').onclick = async () => {
-  const text = $('#reportText').textContent;
+  const text = lastReportText || buildReportText();
   try{
     await navigator.clipboard.writeText(text);
     toast('📋 Отчёт скопирован — вставь в чат');
   }catch(err){
-    // запасной способ для старых браузеров
     try{
       const ta = document.createElement('textarea');
       ta.value = text;
@@ -997,12 +1269,245 @@ function openReport(){
 };
 
  $('#reportShareBtn').onclick = async () => {
-  const text = $('#reportText').textContent;
+  const text = lastReportText || buildReportText();
   if(navigator.share){
     try{ await navigator.share({ title:'Отчёт по продажам — ТОТ БУРГЕР', text }); }
-    catch(err){ /* пользователь отменил — молча */ }
+    catch(err){}
   } else {
     $('#reportCopyBtn').click();
+  }
+};
+
+/* ================= ЗАКАЗ ПРОДУКТОВ ================= */
+function regenOrderReportIfOpen(){
+  if($('#ordReportBox').classList.contains('open')){
+    const text = buildOrderReportText();
+    $('#ordReportText').value = text || '';
+  }
+}
+
+function buildOrdGroups(){
+  const box = $('#ordGroups');
+  box.innerHTML = '';
+  ORDER_LIST.forEach(g => {
+    const div = document.createElement('div');
+    div.className = 'ord-group';
+    div.dataset.group = g.group;
+    const h = document.createElement('h4');
+    h.innerHTML = `${g.icon} ${g.title} <span class="cnt" data-cnt="${g.group}">0</span>`;
+    div.appendChild(h);
+    const chips = document.createElement('div');
+    chips.className = 'chips';
+    g.items.forEach(name => {
+      const id = 'p_' + name;
+      const c = document.createElement('button');
+      c.type = 'button';
+      c.className = 'chip' + (ORD.selected[id] ? ' sel' : '');
+      c.dataset.id = id;
+      c.textContent = name;
+      c.onclick = () => {
+        if(ORD.selected[id]){
+          delete ORD.selected[id];
+          delete ORD.notes[id];
+        } else {
+          ORD.selected[id] = true;
+        }
+        c.classList.toggle('sel', !!ORD.selected[id]);
+        saveOrd(); updateOrdCount(); updateOrderBtnCount();
+        rebuildSelNotes(g, div);
+        regenOrderReportIfOpen();
+      };
+      chips.appendChild(c);
+    });
+    div.appendChild(chips);
+
+    // строки уточнений для выбранных позиций группы
+    const selRows = document.createElement('div');
+    selRows.className = 'sel-notes';
+    div.appendChild(selRows);
+    fillSelNotes(g, selRows);
+
+    box.appendChild(div);
+  });
+  updateOrdCount();
+}
+function fillSelNotes(g, container){
+  container.innerHTML = '';
+  g.items.filter(name => ORD.selected['p_' + name]).forEach(name => {
+    const id = 'p_' + name;
+    const row = document.createElement('div');
+    row.className = 'snote-row';
+    row.innerHTML = `<span class="snote-name">${esc(name)}</span>`;
+    const inp = document.createElement('input');
+    inp.className = 'snote-input';
+    inp.type = 'text';
+    inp.placeholder = 'уточнение: пепси, 2 упак…';
+    inp.maxLength = 80;
+    inp.value = ORD.notes[id] || '';
+    inp.addEventListener('input', () => {
+      ORD.notes[id] = inp.value.trim();
+      saveOrd();
+      regenOrderReportIfOpen();
+    });
+    row.appendChild(inp);
+    container.appendChild(row);
+  });
+}
+function rebuildSelNotes(g, groupDiv){
+  const container = groupDiv.querySelector('.sel-notes');
+  if(container) fillSelNotes(g, container);
+}
+function updateOrdCount(){
+  const total = Object.keys(ORD.selected).length;
+  $('#ordCount').innerHTML = `Выбрано: <b>${total}</b> позиций`;
+  ORDER_LIST.forEach(g => {
+    const n = g.items.filter(name => ORD.selected['p_' + name]).length;
+    const el = document.querySelector(`.cnt[data-cnt="${g.group}"]`);
+    if(el) el.textContent = n;
+  });
+}
+function updateOrderBtnCount(){
+  const n = Object.keys(ORD.selected).length;
+  $('#orderBtn').innerHTML = `🛒<span class="btn-txt"> Заказать продукты на завтра</span>${n ? ` (${n})` : ''}`;
+}
+
+function syncOrdBranchRadios(){
+  document.querySelectorAll('#orderBranchRadios input').forEach(r => {
+    r.checked = (r.value === ORD.branch);
+    r.closest('label').classList.toggle('sel', r.checked);
+  });
+}
+document.querySelectorAll('#orderBranchRadios input').forEach(r => {
+  r.addEventListener('change', () => {
+    ORD.branch = r.value;
+    saveOrd();
+    syncOrdBranchRadios();
+    regenOrderReportIfOpen();
+  });
+});
+
+/* ---------- Дата поставки (с учётом работы после полуночи) ---------- */
+function updateTargetUI(){
+  const t = getTargetDate();
+  const def = defaultTargetDate();
+  const isDef = t.getTime() === def.getTime();
+  $('#ordTargetDate').innerHTML =
+    `📅 Поставка: ${fmtDate(t)} · ${weekday(t)}` +
+    (isDef ? `<small>рассчитано автоматически${new Date().getHours() < CUTOFF_HOUR ? ' · после полуночи — учтено' : ''}</small>`
+           : '<small>дата изменена вручную</small>');
+}
+function shiftTarget(days){
+  const t = getTargetDate();
+  t.setDate(t.getDate() + days);
+  setTargetDate(t);
+  updateTargetUI();
+  regenOrderReportIfOpen();
+}
+ $('#ordPrevDay').onclick = () => shiftTarget(-1);
+ $('#ordNextDay').onclick = () => shiftTarget(1);
+
+function buildOrderReportText(){
+  const totalSel = Object.keys(ORD.selected).length;
+  if(!totalSel) return null;
+  const target = getTargetDate();
+  const now = new Date();
+  const L = [];
+  const DIV = '─────────────────────';
+  L.push('🛒 ЗАКАЗ ПРОДУКТОВ');
+  L.push('🏬 Филиал: ' + ORD.branch);
+  L.push(`📅 На дату: ${fmtDate(target)} (${weekday(target)})`);
+  L.push(`🕒 Составлен: ${fmtDate(now)} ${fmtTime(Date.now())}`);
+  L.push(DIV);
+
+  let total = 0;
+  ORDER_LIST.forEach(g => {
+    const sel = g.items.filter(name => ORD.selected['p_' + name]);
+    if(!sel.length) return;
+    total += sel.length;
+    L.push(`${g.icon} ${g.title.toUpperCase()}:`);
+    sel.forEach(name => {
+      const note = (ORD.notes['p_' + name] || '').trim();
+      L.push('  • ' + name + (note ? ': ' + note : ''));
+    });
+    L.push(DIV);
+  });
+
+  L.push(`📦 Всего позиций: ${total}`);
+  return L.join('\n');
+}
+
+function openOrderModal(){
+  syncOrdBranchRadios();
+  updateTargetUI();
+  $('#ordReportBox').classList.remove('open');
+  $('#ordCopyBtn').style.display = 'none';
+  $('#ordShareBtn').style.display = 'none';
+  buildOrdGroups();
+  $('#orderBack').classList.add('open');
+}
+ $('#orderBtn').onclick = openOrderModal;
+ $('#ordCloseBtn').onclick = () => $('#orderBack').classList.remove('open');
+ $('#orderBack').addEventListener('click', e => { if(e.target === $('#orderBack')) $('#orderBack').classList.remove('open'); });
+
+ $('#ordFormBtn').onclick = () => {
+  const text = buildOrderReportText();
+  if(!text){
+    toast('⚠️ Сначала выбери хотя бы одну позицию');
+    return;
+  }
+  $('#ordReportText').value = text;
+  $('#ordReportBox').classList.add('open');
+  $('#ordReportBox').scrollIntoView({behavior:'smooth', block:'nearest'});
+  $('#ordCopyBtn').style.display = '';
+  $('#ordShareBtn').style.display = '';
+};
+
+ $('#ordCopyBtn').onclick = async () => {
+  const text = $('#ordReportText').value;
+  try{
+    await navigator.clipboard.writeText(text);
+    toast('📋 Заявка скопирована — вставь в чат');
+  }catch(err){
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      toast('📋 Заявка скопирована — вставь в чат');
+    }catch(e2){
+      toast('⚠️ Не скопировалось — выдели текст вручную');
+    }
+  }
+};
+
+ $('#ordShareBtn').onclick = async () => {
+  const text = $('#ordReportText').value;
+  if(navigator.share){
+    try{ await navigator.share({ title:'Заказ продуктов — ' + ORD.branch, text }); }
+    catch(err){}
+  } else {
+    $('#ordCopyBtn').click();
+  }
+};
+
+ $('#ordClearBtn').onclick = () => {
+  const n = Object.keys(ORD.selected).length;
+  if(!n){ toast('Список и так пуст'); return; }
+  if(confirm(`Очистить список заказа? Выбрано позиций: ${n}.`)){
+    ORD.selected = {};
+    ORD.notes = {};
+    ORD.targetISO = null;
+    saveOrd();
+    buildOrdGroups();
+    updateTargetUI();
+    updateOrderBtnCount();
+    $('#ordReportBox').classList.remove('open');
+    $('#ordCopyBtn').style.display = 'none';
+    $('#ordShareBtn').style.display = 'none';
+    toast('🧹 Список заказа очищен');
   }
 };
 
@@ -1013,7 +1518,7 @@ function openReport(){
   const a = document.createElement('a');
   const d = new Date(), pad = n => String(n).padStart(2,'0');
   a.href = URL.createObjectURL(blob);
-  a.download = `tot-burger-${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}.json`;
+  a.download = `tot-burger-${S.branch || 'смена'}-${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}.json`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   toast('💾 Бэкап скачан — сохраните файл');
@@ -1030,8 +1535,9 @@ function openReport(){
       if(!st || typeof st !== 'object' || !('completed' in st) || !('preparing' in st)) throw new Error('bad format');
       if(!confirm('Восстановить смену из файла? Текущие данные будут заменены.')) return;
       S = Object.assign(defaultState(), st);
+      $('#branchSel').value = S.branch || '202-й';
       save(); renderAll();
-      toast('📂 Смена восстановлена из бэкапа');
+      toast('📂 Смена восстановлена из бэкапа · 🏬 ' + S.branch);
     }catch(err){
       alert('Не удалось прочитать файл. Убедитесь, что это файл бэкапа этой кассы (.json).');
     }
@@ -1055,16 +1561,16 @@ function renderAll(){
   renderPreparing();
   renderCompleted();
   renderStats();
+  updateOrderBtnCount();
   $('#pillPrep').textContent = S.preparing.length;
   $('#pillDone').textContent = S.completed.length;
 }
 buildMenu(); renderAll(); updateSaveInd(true);
 
-/* Сообщение о восстановлении — только если реально есть заказы */
 const _hadSaved = !!(localStorage.getItem(LS_KEY) || localStorage.getItem(LS_BACKUP));
 const _hasOrders = S.completed.length > 0 || S.preparing.length > 0 || Object.keys(S.current.items).length > 0;
 if(_hadSaved && _hasOrders){
-  setTimeout(() => toast('📂 Смена восстановлена — все заказы на месте'), 400);
+  setTimeout(() => toast('📂 Смена восстановлена · 🏬 ' + S.branch), 400);
 }
 </script>
 </body>

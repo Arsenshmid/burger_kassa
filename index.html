@@ -198,20 +198,25 @@ tr:last-child td{border-bottom:none}
 .arc-item{background:#211c16;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
 .arc-item .tsub{display:block;margin-top:3px}
 
-#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(90px);
+/* ---------- Уведомление (toast) ---------- */
+/* Скрывается надёжно: уезжает И растворяется (opacity + visibility) */
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(150px);
   background:linear-gradient(180deg,#ff9424,#ff6400);color:#fff;font-weight:800;padding:13px 22px;border-radius:14px;
-  box-shadow:0 10px 30px rgba(0,0,0,.5);transition:transform .3s;z-index:200;max-width:90vw;text-align:center}
-#toast.show{transform:translateX(-50%) translateY(0)}
+  box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:300;max-width:90vw;text-align:center;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:transform .3s, opacity .3s, visibility 0s linear .3s}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible;
+  transition:transform .3s, opacity .3s, visibility 0s}
 
 /* =========================================================
-   ТЕЛЕФОН / ПЛАНШЕТ: шапка уходит вниз экрана
+   ТЕЛЕФОН / ПЛАНШЕТ: шапка внизу экрана
    ========================================================= */
 @media(max-width:1080px){
   .layout{grid-template-columns:1fr}
   .order-panel{position:static;max-height:none}
   .shift-grid{grid-template-columns:1fr}
 
-  body{padding-bottom:96px} /* место под нижнюю панель */
+  body{padding-bottom:96px}
   header{
     position:fixed;top:auto;bottom:0;left:0;right:0;z-index:60;
     justify-content:center;gap:7px;flex-wrap:wrap;
@@ -220,15 +225,15 @@ tr:last-child td{border-bottom:none}
     background:rgba(14,12,10,.97);
   }
   .brand{display:none}
-  .save-ind{font-size:0;gap:0;padding:9px 9px} /* остаётся только зелёная точка */
+  .save-ind{font-size:0;gap:0;padding:9px 9px}
   .pill{padding:6px 9px}
   .clock{text-align:center;line-height:1.2}
   .clock .d{display:none}
   .clock .dshort{display:block}
   .clock .t{font-size:15px}
   .btn{padding:9px 11px;border-radius:10px;font-size:16px}
-  .btn .btn-txt{display:none} /* только иконки */
-  #toast{bottom:110px}
+  .btn .btn-txt{display:none}
+  #toast{bottom:120px}
 }
 @media print{
   body *{visibility:hidden}
@@ -439,7 +444,8 @@ const fmtTime = ts => new Date(ts).toLocaleTimeString('ru-RU', {hour:'2-digit', 
 let toastTimer;
 function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 function elapsedText(ts){
   const m = Math.floor((Date.now() - ts) / 60000);
@@ -908,8 +914,11 @@ function renderAll(){
 }
 buildMenu(); renderAll(); updateSaveInd(true);
 
-if(loadState()){
-  toast('📂 Смена восстановлена — все заказы на месте');
+/* Сообщение о восстановлении — только если реально есть заказы */
+const _hadSaved = !!(localStorage.getItem(LS_KEY) || localStorage.getItem(LS_BACKUP));
+const _hasOrders = S.completed.length > 0 || S.preparing.length > 0 || Object.keys(S.current.items).length > 0;
+if(_hadSaved && _hasOrders){
+  setTimeout(() => toast('📂 Смена восстановлена — все заказы на месте'), 400);
 }
 </script>
 </body>

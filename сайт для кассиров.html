@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ТОТ БУРГЕР · Касса</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#131110; --panel:#1d1916; --card:#231e18; --line:#3a3128;
+  --orange:#ff7a00; --orange2:#ffa133; --text:#f6efe4; --muted:#a3968a;
+}
+body{
+  background:
+    radial-gradient(1000px 500px at 80% -10%, rgba(255,122,0,.12), transparent 60%),
+    radial-gradient(800px 400px at -10% 30%, rgba(255,122,0,.06), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Montserrat','Segoe UI',system-ui,sans-serif;
+  min-height:100vh;
+}
+button{font-family:inherit}
+
+/* ---------- Шапка ---------- */
+header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:12px 22px;background:rgba(14,12,10,.94);backdrop-filter:blur(6px);border-bottom:2px solid var(--orange)}
+.brand{font-weight:900;font-size:22px;letter-spacing:.5px;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.brand .b2{color:var(--orange)}
+.brand small{font-weight:700;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--line);padding:3px 8px;border-radius:20px}
+.head-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;padding:7px 12px;border-radius:20px;border:1px solid var(--line);background:var(--card);cursor:default}
+.pill.fire{color:#ffb066;border-color:#6b3a12}
+.pill.ok{color:#8fe3a1;border-color:#2f5c3a}
+.pill b{font-size:15px}
+.save-ind{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:#8fe3a1;border:1px solid #2f5c3a;padding:7px 12px;border-radius:20px;background:rgba(40,90,55,.14);white-space:nowrap}
+.save-ind .dot{width:8px;height:8px;border-radius:50%;background:#34c06a;box-shadow:0 0 8px #34c06a;flex:none}
+.save-ind.err{color:#ff8877;border-color:#7a2a20;background:rgba(120,30,20,.18)}
+.save-ind.err .dot{background:#ff5d5d;box-shadow:0 0 8px #ff5d5d}
+.clock{text-align:right;line-height:1.25}
+.clock .d{text-transform:capitalize;font-size:12px;color:var(--muted)}
+.clock .t{font-size:18px;font-weight:800}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--orange);color:var(--orange2)}
+.btn.primary{background:linear-gradient(180deg,#ff8c1a,#ff6400);border:none;color:#fff;box-shadow:0 4px 14px rgba(255,106,0,.35)}
+.btn.primary:hover{color:#fff;filter:brightness(1.07)}
+.btn.danger{background:#3a1410;border-color:#7a2a20;color:#ff8877}
+
+/* ---------- Раскладка ---------- */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;padding:18px 22px;max-width:1560px;margin:0 auto;align-items:start}
+.page-foot{padding:0 22px 30px;max-width:1560px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+.sec-title{font-size:16px;font-weight:900;letter-spacing:.5px;margin:6px 0 12px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sec-title .hint{font-weight:500;font-size:11px;color:var(--muted);letter-spacing:0}
+.menu-section{margin-top:22px}
+.menu-section:first-child{margin-top:0}
+.menu-section .sec-title{border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:12px}
+
+/* ---------- Карточки меню ---------- */
+.grid{display:grid;gap:12px}
+.burgers{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.extras{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.card{position:relative;background:linear-gradient(180deg,#292219,#1c1815);border:1px solid var(--line);border-radius:16px;
+  padding:16px 12px 14px;text-align:center;cursor:pointer;user-select:none;overflow:hidden;transition:transform .12s,border-color .12s,box-shadow .12s}
+.card:hover{transform:translateY(-2px);border-color:var(--orange);box-shadow:0 10px 26px rgba(255,122,0,.14)}
+.card .stripe{position:absolute;top:0;left:0;right:0;height:4px}
+.card .pic{font-size:46px;line-height:1.1;padding:8px 0 6px;filter:drop-shadow(0 8px 16px rgba(255,140,0,.28))}
+.card .name{font-weight:800;font-size:13px;min-height:34px;display:flex;align-items:center;justify-content:center;gap:6px;line-height:1.25}
+.card .tag{font-size:15px}
+.card .meta{color:var(--muted);font-size:12px;margin-top:6px}
+.card .meta b{color:var(--orange2);font-size:16px;margin-left:4px}
+.add-btn{position:absolute;right:10px;bottom:10px;width:42px;height:42px;border-radius:50%;border:none;
+  background:linear-gradient(180deg,#ff9424,#ff6400);color:#fff;font-size:24px;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 16px rgba(255,106,0,.45);transition:.1s;display:flex;align-items:center;justify-content:center;padding-bottom:3px}
+.add-btn:hover{transform:scale(1.1)}
+.add-btn:active{transform:scale(.9)}
+.qty-badge{position:absolute;top:8px;right:8px;min-width:26px;height:26px;border-radius:13px;background:var(--orange);color:#fff;
+  font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center;padding:0 7px;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+.qty-badge.pop{animation:pop .25s}
+
+/* ---------- Панель текущего заказа ---------- */
+.order-panel{position:sticky;top:84px;display:flex;flex-direction:column;max-height:calc(100vh - 104px);padding:0;overflow:hidden;border-left:4px solid var(--orange)}
+.order-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;
+  background:linear-gradient(180deg,#2a2015,#221b13);border-bottom:1px solid var(--line)}
+.order-head .ttl{font-weight:900;font-size:18px;letter-spacing:1px}
+.order-head .ttl span{color:var(--orange2)}
+.mini-btn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer}
+.mini-btn:hover{color:#ff8877;border-color:#7a2a20}
+.order-items{flex:1;overflow-y:auto;padding:12px 14px;scrollbar-width:thin}
+.empty{color:var(--muted);text-align:center;padding:30px 10px;font-size:14px;line-height:1.7}
+.oi{border:1px solid var(--line);background:#211c16;border-radius:14px;padding:10px 12px;margin-bottom:10px}
+.oi-top{display:flex;justify-content:space-between;gap:10px;font-weight:800;font-size:13.5px;line-height:1.3}
+.oi-top .calc{color:var(--muted);font-weight:700;white-space:nowrap;font-size:12.5px}
+.oi-top .calc b{color:var(--orange2);font-size:14px}
+.oi-controls{display:flex;align-items:center;gap:8px;margin-top:8px}
+.qty-btn{width:30px;height:30px;border-radius:9px;border:1px solid #4a4034;background:#2a241d;color:#fff;font-size:17px;font-weight:800;cursor:pointer;line-height:1}
+.qty-btn:hover{border-color:var(--orange);color:var(--orange2)}
+.qty-num{min-width:22px;text-align:center;font-weight:900;font-size:15px}
+.oi-note-btn{margin-left:auto;background:none;border:1px dashed #6b5a48;color:var(--muted);border-radius:9px;padding:5px 9px;font-size:11.5px;font-weight:700;cursor:pointer}
+.oi-note-btn:hover{color:var(--orange2);border-color:var(--orange)}
+.oi-note{margin-top:8px;font-size:12px;color:#ffc06a;background:rgba(255,176,58,.09);border:1px solid rgba(255,176,58,.25);border-radius:9px;padding:5px 9px}
+.note-input{width:100%;margin-top:8px;background:#120f0c;border:1px solid var(--orange);color:#fff;border-radius:9px;padding:7px 10px;font-size:13px;outline:none}
+.order-foot{border-top:1px solid var(--line);padding:12px 14px;background:#211c16}
+.total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.total-row span{color:var(--muted);font-weight:700;letter-spacing:1px;font-size:13px}
+.total-row b{font-size:26px;font-weight:900;color:var(--orange2)}
+.pay-label{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.pay-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pay-btns button{padding:11px 4px;border-radius:11px;border:1px solid #4a4034;background:#262019;color:var(--text);cursor:pointer;font-weight:800;font-size:12.5px;transition:.12s}
+.pay-btns button:hover{border-color:var(--orange)}
+.pay-btns button.active{background:linear-gradient(180deg,#ff8c1a,#ff6400);border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(255,106,0,.35)}
+.send{margin-top:12px;width:100%;padding:15px;font-size:18px;font-weight:900;letter-spacing:1.5px;border:none;border-radius:14px;
+  background:linear-gradient(180deg,#ff9424,#ff5d00);color:#fff;cursor:pointer;box-shadow:0 6px 22px rgba(255,106,0,.4);transition:.12s}
+.send:hover{filter:brightness(1.07)}
+.send:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.cancel-order{margin-top:8px;width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;padding:4px}
+.cancel-order:hover{color:#ff8877}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.shake{animation:shake .4s}
+
+/* ---------- Доска «Готовятся» ---------- */
+.prep-head-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.inwork{font-size:13px;color:var(--muted);font-weight:700}
+.inwork b{color:var(--orange2)}
+.prep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px;margin-top:14px}
+.pcard{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.pcard-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pnum{font-size:20px;font-weight:900;color:var(--orange2);white-space:nowrap}
+.pt{font-size:11.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+.grow{flex:1}
+.timer{font-size:12px;font-weight:800;padding:4px 9px;border-radius:12px;background:#2a241d;color:var(--muted);white-space:nowrap}
+.timer.warn{background:#4a2f10;color:#ffb066}
+.timer.late{background:#4a1410;color:#ff8877}
+.pay-sel{background:#262019;border:1px solid #4a4034;color:var(--text);border-radius:9px;padding:6px 8px;font-weight:700;font-size:12px;font-family:inherit;outline:none;cursor:pointer}
+.pay-sel:focus{border-color:var(--orange)}
+.plist{font-size:13px;display:flex;flex-direction:column;gap:4px}
+.pline{display:flex;justify-content:space-between;gap:8px}
+.pline .nm{font-weight:700}
+.pline .pr{color:var(--muted);white-space:nowrap}
+.pline .pr b{color:var(--orange2)}
+.nt{color:#ffc06a;font-size:11.5px;font-style:italic}
+.ptotal{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed #3a3128;padding-top:8px;font-weight:900}
+.ptotal span{color:var(--muted);font-size:12px;letter-spacing:1px}
+.ptotal b{color:var(--orange2);font-size:19px}
+.pbtns{display:flex;gap:8px}
+.give{flex:1;padding:12px;border:none;border-radius:12px;background:linear-gradient(180deg,#34c06a,#1f9a4e);color:#fff;font-weight:900;font-size:14.5px;letter-spacing:.5px;cursor:pointer;box-shadow:0 4px 16px rgba(30,160,80,.3);transition:.12s}
+.give:hover{filter:brightness(1.08)}
+.icon-btn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:8px 11px;font-size:13px;cursor:pointer;font-weight:700;transition:.12s}
+.icon-btn:hover{color:var(--orange2);border-color:var(--orange)}
+.icon-btn.del:hover{color:#ff8877;border-color:#7a2a20}
+
+/* ---------- Таблица и статистика ---------- */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid #2a241e;vertical-align:top}
+tr:last-child td{border-bottom:none}
+.num{font-weight:900;color:var(--orange2)}
+.sum{font-weight:900;white-space:nowrap}
+.line-item{margin:1px 0}
+.line-item .nt{font-size:11.5px}
+.tsub{color:var(--muted);font-size:11px}
+.pay-tag{display:inline-block;font-size:11px;font-weight:800;border-radius:14px;padding:3px 9px;background:#2a241d;border:1px solid #4a4034;white-space:nowrap}
+.pay-tag.Наличные{color:#8fe3a1;border-color:#2f5c3a}
+.pay-tag.Терминал{color:#9fc5ff;border-color:#2f4a7a}
+.pay-tag.Перевод{color:#ffd58f;border-color:#7a5a2f}
+.del-order{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;width:26px;height:26px;cursor:pointer;font-size:13px;line-height:1}
+.del-order:hover{color:#ff8877;border-color:#7a2a20}
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.stat-card{background:#211c16;border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat-card .v{font-size:22px;font-weight:900;color:var(--orange2)}
+.stat-card .l{font-size:12px;color:var(--muted);font-weight:700;margin-top:2px}
+.stat-card .sub{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.55;border-top:1px dashed #3a3128;padding-top:8px}
+.shift-btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;flex-wrap:wrap}
+.storage-note{font-size:11.5px;color:var(--muted);line-height:1.5}
+
+/* ---------- Модалка итогов ---------- */
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-back.open{display:flex}
+.modal{background:linear-gradient(180deg,#241e17,#1a1611);border:1px solid #4a4034;border-radius:20px;max-width:620px;width:100%;max-height:88vh;overflow:auto;padding:24px}
+.modal h2{font-size:20px;font-weight:900;margin-bottom:4px}
+.mdate{color:var(--muted);font-size:13px;margin-bottom:16px;text-transform:capitalize}
+.shift-hero{background:linear-gradient(180deg,#ff8c1a,#ff6400);border-radius:16px;padding:16px;text-align:center;margin-bottom:16px;box-shadow:0 8px 26px rgba(255,106,0,.35)}
+.shift-hero .l{font-size:12px;font-weight:800;letter-spacing:2px;color:rgba(255,255,255,.85)}
+.shift-hero .v{font-size:38px;font-weight:900;color:#fff}
+.shift-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.shift-cell{background:#211c16;border:1px solid var(--line);border-radius:12px;padding:12px}
+.shift-cell .v{font-weight:900;font-size:17px;color:var(--orange2)}
+.shift-cell .l{font-size:11.5px;color:var(--muted);font-weight:700}
+.shift-cell.full{grid-column:1/-1}
+.shift-cell .sub{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
+.modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap}
+#archiveBox{display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+#archiveBox.open{display:block}
+#archiveBox h3{font-size:14px;font-weight:900;margin-bottom:10px}
+.arc-item{background:#211c16;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.arc-item .tsub{display:block;margin-top:3px}
+
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(90px);
+  background:linear-gradient(180deg,#ff9424,#ff6400);color:#fff;font-weight:800;padding:13px 22px;border-radius:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);transition:transform .3s;z-index:200;max-width:90vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:1080px){
+  .layout{grid-template-columns:1fr}
+  .order-panel{position:static;max-height:none}
+  .shift-grid{grid-template-columns:1fr}
+}
+@media print{
+  body *{visibility:hidden}
+  .modal-back.open,.modal-back.open *{visibility:visible}
+  .modal-back.open{position:absolute;inset:0;background:#fff}
+  .modal{background:#fff;color:#000;border:none}
+  .shift-hero{background:none;border:2px solid #000;box-shadow:none}
+  .shift-hero .v,.shift-cell .v{color:#000}
+  .modal-actions,#archiveBox{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">🔥 ТОТ<span class="b2">БУРГЕР</span><small>касса</small></div>
+  <div class="head-right">
+    <span class="save-ind" id="saveInd" title="Данные автоматически сохраняются"><span class="dot"></span>…</span>
+    <span class="pill fire" title="Заказы на кухне">🔥 <b id="pillPrep">0</b></span>
+    <span class="pill ok" title="Выполнено за смену">✅ <b id="pillDone">0</b></span>
+    <div class="clock"><div class="d" id="dateLine">—</div><div class="t" id="timeLine">—</div></div>
+    <button class="btn" id="exportBtn" title="Скачать резервную копию смены на устройство">💾 Бэкап</button>
+    <button class="btn" id="importBtn" title="Восстановить смену из файла бэкапа">📂 Восстановить</button>
+    <button class="btn" id="endShiftBtn">📊 Итоги смены</button>
+  </div>
+</header>
+<input type="file" id="importFile" accept=".json,application/json" hidden>
+
+<div class="layout">
+  <!-- МЕНЮ: 4 СЕКЦИИ -->
+  <section class="panel">
+    <div class="menu-section">
+      <h2 class="sec-title">🍔 БУРГЕРЫ <span class="hint">— считаются по штукам</span></h2>
+      <div class="grid burgers" id="burgerGrid"></div>
+    </div>
+    <div class="menu-section">
+      <h2 class="sec-title">🍟 КАРТОШКА ФРИ И ФРАЙС</h2>
+      <div class="grid extras" id="friesGrid"></div>
+    </div>
+    <div class="menu-section">
+      <h2 class="sec-title">🥤 НАПИТКИ</h2>
+      <div class="grid extras" id="drinkGrid"></div>
+    </div>
+    <div class="menu-section">
+      <h2 class="sec-title">🥣 СОУСЫ</h2>
+      <div class="grid extras" id="sauceGrid"></div>
+    </div>
+  </section>
+
+  <!-- ТЕКУЩИЙ ЗАКАЗ -->
+  <aside class="panel order-panel">
+    <div class="order-head">
+      <div class="ttl">ЗАКАЗ <span id="orderNum">#—</span></div>
+      <button class="mini-btn" id="clearOrderBtn">✕ отменить</button>
+    </div>
+    <div class="order-items" id="orderItems"></div>
+    <div class="order-foot">
+      <div class="total-row"><span>ИТОГО</span><b id="orderTotal">0 ₽</b></div>
+      <div class="pay-label">ВИД ОПЛАТЫ:</div>
+      <div class="pay-btns" id="payBtns">
+        <button data-pay="Наличные">💵 Наличные</button>
+        <button data-pay="Терминал">💳 Терминал</button>
+        <button data-pay="Перевод">📱 Перевод</button>
+      </div>
+      <button class="send" id="sendBtn" disabled>🔥 НА КУХНЮ</button>
+      <button class="cancel-order" id="cancelOrderBtn">отменить заказ</button>
+    </div>
+  </aside>
+</div>
+
+<div class="page-foot">
+  <!-- ГОТОВЯТСЯ -->
+  <section class="panel">
+    <div class="prep-head-row">
+      <h2 class="sec-title" style="margin:0">🔥 ГОТОВЯТСЯ <span class="hint">— нажми «ОТДАНО ✓», когда отдал бургеры клиенту</span></h2>
+      <div class="inwork" id="inWorkInfo"></div>
+    </div>
+    <div class="prep-grid" id="prepGrid"></div>
+    <div class="empty" id="prepEmpty">Спокойно, очередь пуста 🙂<br>Собери заказ в панели справа и нажми «🔥 НА КУХНЮ»</div>
+  </section>
+
+  <!-- ВЫПОЛНЕННЫЕ -->
+  <section class="panel">
+    <h2 class="sec-title">✅ ВЫПОЛНЕННЫЕ ЗАКАЗЫ</h2>
+    <div style="overflow-x:auto">
+      <table id="doneTable" style="display:none">
+        <thead><tr><th>№</th><th>Время</th><th>Состав</th><th>Оплата</th><th>Сумма</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="empty" id="doneEmpty">Пока нет выполненных заказов</div>
+    </div>
+  </section>
+
+  <!-- СТАТИСТИКА -->
+  <section class="panel">
+    <h2 class="sec-title">📊 СТАТИСТИКА СМЕНЫ <span class="hint">— считаются только отданные заказы · бургеры по штукам, остальное по деньгам</span></h2>
+    <div class="stat-cards" id="statCards"></div>
+    <div class="shift-btn-row">
+      <div class="storage-note">💾 Данные хранятся в этом браузере и не пропадут при закрытии сайта.<br>Для страховки (или переноса на другое устройство) — кнопка «💾 Бэкап».</div>
+      <button class="btn primary" id="sumBtn">💰 Сформировать общую сумму продаж</button>
+    </div>
+  </section>
+</div>
+
+<!-- ИТОГИ СМЕНЫ -->
+<div class="modal-back" id="modalBack">
+  <div class="modal">
+    <h2>📊 Итоги смены</h2>
+    <div class="mdate" id="shiftDate"></div>
+    <div class="shift-hero">
+      <div class="l">ОБЩАЯ СУММА ПРОДАЖ</div>
+      <div class="v" id="shiftTotal">0 ₽</div>
+    </div>
+    <div class="shift-grid" id="shiftGrid"></div>
+    <div id="archiveBox">
+      <h3>📚 Архив прошлых смен</h3>
+      <div id="archiveList"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="archiveBtn">📚 Архив смен</button>
+      <button class="btn" id="printBtn">🖨 Печать</button>
+      <button class="btn danger" id="newShiftBtn">🧹 Новая смена (текущая уйдёт в архив)</button>
+      <button class="btn" id="closeModalBtn">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+const LS_KEY      = 'tot-burger-cash-v1';
+const LS_BACKUP   = 'tot-burger-cash-backup-v1'; // страховочная копия
+const ARC_KEY     = 'tot-burger-archive-v1';
+
+/* ================= МЕНЮ ================= */
+const MENU = [
+  // Бургеры (учёт количества)
+  {id:'firm',    type:'burger', name:'ТОТ САМЫЙ ФИРМЕННЫЙ', short:'Фирменный', price:690, weight:'460 г', emoji:'🍔', tag:'⭐',  color:'#ff7a00'},
+  {id:'cheese',  type:'burger', name:'ТОТ САМЫЙ СЫРНЫЙ',    short:'Сырный',    price:640, weight:'460 г', emoji:'🍔', tag:'🧀', color:'#ffc63a'},
+  {id:'double',  type:'burger', name:'ТОТ БУРГЕР',          short:'Тот Бургер',price:790, weight:'550 г', emoji:'🍔', tag:'2×', color:'#ff4d1f'},
+  {id:'hot',     type:'burger', name:'ТОТ САМЫЙ ОСТРЫЙ',    short:'Острый',    price:700, weight:'470 г', emoji:'🍔', tag:'🌶️', color:'#ff2e2e'},
+  {id:'classic', type:'burger', name:'ТОТ САМЫЙ',           short:'Тот Самый', price:590, weight:'400 г', emoji:'🍔', tag:'🔥', color:'#ffb03a'},
+  {id:'honey',   type:'burger', name:'ТОТ САМЫЙ МЕДОВЫЙ',   short:'Медовый',   price:640, weight:'440 г', emoji:'🍔', tag:'🍯', color:'#e8a51f'},
+  // Фри (только деньги)
+  {id:'fries',   type:'extra', cat:'fries', name:'Картошка фри',    price:200, weight:'150 г', emoji:'🍟'},
+  {id:'frais',   type:'extra', cat:'fries', name:'Фрайс с беконом', price:350, weight:'260 г', emoji:'🥓'},
+  // Напитки (только деньги)
+  {id:'cola',    type:'extra', cat:'drink', name:'Кола 0,33',   price:130, emoji:'🥤', color:'#e02f2f'},
+  {id:'sprite',  type:'extra', cat:'drink', name:'Спрайт 0,33', price:130, emoji:'🥤', color:'#2fae4f'},
+  {id:'energy',  type:'extra', cat:'drink', name:'Энергетик',   price:180, emoji:'⚡'},
+  // Соусы (только деньги)
+  {id:'sau_cheese',  type:'extra', cat:'sauce', name:'Соус сырный',        price:30, weight:'25 г', emoji:'🧀'},
+  {id:'sau_ketchup', type:'extra', cat:'sauce', name:'Соус кетчуп',        price:30, weight:'25 г', emoji:'🍅'},
+  {id:'sau_bbq',     type:'extra', cat:'sauce', name:'Соус барбекю',       price:30, weight:'25 г', emoji:'🍖'},
+  {id:'sau_sweet',   type:'extra', cat:'sauce', name:'Соус кисло-сладкий', price:30, weight:'25 г', emoji:'🥢'},
+];
+
+/* ================= СОСТОЯНИЕ ================= */
+function defaultState(){
+  return {
+    orderSeq: 1,
+    lastSaved: null,                                 // время последнего сохранения
+    current: { num:null, items:{}, payment:null },   // черновик
+    preparing: [],                                   // 🔥 на кухне
+    completed: [],                                   // ✅ отдано
+    burgerSales: {},
+    extrasRevenue: { fries:0, drink:0, sauce:0 }
+  };
+}
+function loadState(){
+  // пробуем основное хранилище, при сбое — страховочную копию
+  for(const key of [LS_KEY, LS_BACKUP]){
+    try{
+      const raw = localStorage.getItem(key);
+      if(!raw) continue;
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object' && 'completed' in parsed){
+        return Object.assign(defaultState(), parsed);
+      }
+    }catch(e){ /* пробуем следующий ключ */ }
+  }
+  return null;
+}
+let S = loadState() || defaultState();
+function save(){
+  S.lastSaved = Date.now();
+  let ok = true;
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){ ok = false; }
+  try{ localStorage.setItem(LS_BACKUP, JSON.stringify(S)); }catch(e){}
+  updateSaveInd(ok);
+}
+
+/* ---- Архив смен (переживает "новую смену") ---- */
+function loadArchive(){ try{ return JSON.parse(localStorage.getItem(ARC_KEY) || '[]'); }catch(e){ return []; } }
+function saveArchive(){ try{ localStorage.setItem(ARC_KEY, JSON.stringify(ARC)); }catch(e){} }
+let ARC = loadArchive();
+
+/* ================= ХЕЛПЕРЫ ================= */
+const $ = s => document.querySelector(s);
+const item = id => MENU.find(m => m.id === id);
+const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtTime = ts => new Date(ts).toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+let toastTimer;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+function elapsedText(ts){
+  const m = Math.floor((Date.now() - ts) / 60000);
+  if(m < 1) return 'только что';
+  if(m < 60) return m + ' мин';
+  return Math.floor(m/60) + ' ч ' + (m % 60) + ' мин';
+}
+
+/* ================= ИНДИКАТОР СОХРАНЕНИЯ ================= */
+function updateSaveInd(ok = true){
+  const el = $('#saveInd');
+  el.classList.toggle('err', !ok);
+  if(!ok){
+    el.innerHTML = '<span class="dot"></span>ОШИБКА СОХРАНЕНИЯ';
+    el.title = 'Браузер не даёт записать данные (нет места или запрет хранилища). Скачайте бэкап!';
+    return;
+  }
+  if(S.lastSaved){
+    el.innerHTML = '<span class="dot"></span>сохранено ' + fmtTime(S.lastSaved);
+    el.title = 'Все заказы автоматически сохраняются в этом браузере';
+  } else {
+    el.innerHTML = '<span class="dot"></span>автосохранение';
+  }
+}
+// страховка: дожимаем сохранение при закрытии/сворачивании вкладки
+window.addEventListener('beforeunload', () => { try{ save(); }catch(e){} });
+document.addEventListener('visibilitychange', () => { if(document.hidden){ try{ save(); }catch(e){} } });
+
+/* ================= МЕНЮ: ОТРИСОВКА ================= */
+function targetGrid(m){
+  if(m.type === 'burger') return $('#burgerGrid');
+  if(m.cat === 'fries')   return $('#friesGrid');
+  if(m.cat === 'drink')   return $('#drinkGrid');
+  if(m.cat === 'sauce')   return $('#sauceGrid');
+  return $('#friesGrid');
+}
+function buildMenu(){
+  MENU.forEach(m => {
+    const el = document.createElement('div');
+    el.className = 'card'; el.dataset.id = m.id;
+    el.innerHTML = `
+      ${m.color ? `<div class="stripe" style="background:${m.color}"></div>` : ''}
+      <div class="pic">${m.emoji}</div>
+      <div class="name">${m.name}${m.tag ? ` <span class="tag">${m.tag}</span>` : ''}</div>
+      <div class="meta">${m.weight ? m.weight + ' ·' : ''}<b>${m.price} ₽</b></div>
+      <button class="add-btn" title="Добавить в заказ">+</button>
+      <div class="qty-badge" hidden></div>`;
+    el.addEventListener('click', () => addItem(m.id));
+    targetGrid(m).appendChild(el);
+  });
+}
+function updateBadges(){
+  MENU.forEach(m => {
+    const b = document.querySelector(`.card[data-id="${m.id}"] .qty-badge`);
+    if(!b) return;
+    const q = S.current.items[m.id]?.qty || 0;
+    if(q > 0){ b.hidden = false; b.textContent = q; } else { b.hidden = true; }
+  });
+}
+function pulse(id){
+  const b = document.querySelector(`.card[data-id="${id}"] .qty-badge`);
+  if(!b) return;
+  b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+}
+
+/* ================= ЧЕРНОВИК ЗАКАЗА ================= */
+function addItem(id){
+  const it = S.current.items[id] || (S.current.items[id] = { qty:0, note:'' });
+  it.qty++;
+  save(); renderOrder(); pulse(id);
+}
+function decItem(id){
+  const it = S.current.items[id]; if(!it) return;
+  it.qty--; if(it.qty <= 0) delete S.current.items[id];
+  save(); renderOrder();
+}
+function currentTotal(){
+  return Object.entries(S.current.items).reduce((s,[id,it]) => s + item(id).price * it.qty, 0);
+}
+
+function renderOrder(){
+  const draftNum = S.current.num ?? S.orderSeq;
+  $('#orderNum').textContent = '#' + draftNum;
+  const box = $('#orderItems');
+  const ids = Object.keys(S.current.items);
+  if(!ids.length){
+    box.innerHTML = '<div class="empty">🛒 Заказ пуст<br>Нажимайте <b style="color:var(--orange2)">+</b> на карточках,<br>чтобы собрать заказ</div>';
+  } else {
+    box.innerHTML = '';
+    ids.forEach(id => {
+      const m = item(id), it = S.current.items[id];
+      const div = document.createElement('div'); div.className = 'oi';
+      div.innerHTML = `
+        <div class="oi-top">
+          <span>${m.name}</span>
+          <span class="calc">${m.price} ₽ × ${it.qty} = <b>${m.price*it.qty} ₽</b></span>
+        </div>
+        ${it.note ? `<div class="oi-note">📝 ${esc(it.note)}</div>` : ''}
+        <div class="oi-controls">
+          <button class="qty-btn" data-a="dec">−</button>
+          <span class="qty-num">${it.qty}</span>
+          <button class="qty-btn" data-a="inc">+</button>
+          <button class="oi-note-btn" data-a="note">📝 заметка</button>
+        </div>`;
+      div.querySelector('[data-a="dec"]').onclick = e => { e.stopPropagation(); decItem(id); };
+      div.querySelector('[data-a="inc"]').onclick = e => { e.stopPropagation(); addItem(id); };
+      div.querySelector('[data-a="note"]').onclick = e => { e.stopPropagation(); openNote(div, id); };
+      box.appendChild(div);
+    });
+  }
+  $('#orderTotal').textContent = fmt(currentTotal());
+  document.querySelectorAll('#payBtns button').forEach(b =>
+    b.classList.toggle('active', b.dataset.pay === S.current.payment));
+  $('#sendBtn').disabled = ids.length === 0;
+  updateBadges();
+}
+
+function openNote(div, id){
+  if(div.querySelector('.note-input')) return;
+  const it = S.current.items[id];
+  const inp = document.createElement('input');
+  inp.className = 'note-input'; inp.placeholder = 'Например: без лука';
+  inp.value = it.note || ''; inp.maxLength = 120;
+  div.querySelector('.oi-controls').insertAdjacentElement('afterend', inp);
+  inp.focus();
+  inp.addEventListener('keydown', e => {
+    if(e.key === 'Enter') inp.blur();
+    if(e.key === 'Escape'){ inp.value = it.note || ''; inp.blur(); }
+  });
+  inp.addEventListener('blur', () => {
+    it.note = inp.value.trim();
+    save(); renderOrder();
+  });
+}
+
+document.querySelectorAll('#payBtns button').forEach(b => {
+  b.addEventListener('click', () => { S.current.payment = b.dataset.pay; save(); renderOrder(); });
+});
+
+/* ---------- Отправка на кухню ---------- */
+ $('#sendBtn').addEventListener('click', () => {
+  const ids = Object.keys(S.current.items);
+  if(!ids.length) return;
+  if(!S.current.payment){
+    toast('⚠️ Выберите вид оплаты!');
+    const pb = $('#payBtns'); pb.classList.remove('shake'); void pb.offsetWidth; pb.classList.add('shake');
+    return;
+  }
+  const num = S.current.num ?? S.orderSeq++;
+  const total = currentTotal();
+  const snapshot = ids.map(id => {
+    const m = item(id), it = S.current.items[id];
+    return { id, name:m.name, short:m.short, price:m.price, qty:it.qty, note:it.note || '', type:m.type, cat:m.cat || null };
+  });
+  S.preparing.push({ num, sentAt: Date.now(), items: snapshot, total, payment: S.current.payment });
+  S.current = { num:null, items:{}, payment:null };
+  save(); renderAll();
+  toast(`🔥 Заказ №${num} на кухне — ${fmt(total)}`);
+});
+
+function cancelDraft(){
+  const hasNum = S.current.num != null;
+  const hasItems = Object.keys(S.current.items).length > 0;
+  if(!hasItems && !hasNum) return;
+  const msg = hasNum
+    ? `Отменить заказ №${S.current.num}? Заказ будет удалён без записи в статистику.`
+    : 'Отменить текущий заказ?';
+  if(confirm(msg)){
+    S.current = { num:null, items:{}, payment:null };
+    save(); renderAll();
+  }
+}
+ $('#cancelOrderBtn').onclick = cancelDraft;
+ $('#clearOrderBtn').onclick = cancelDraft;
+
+/* ================= ДОСКА «ГОТОВЯТСЯ» ================= */
+function renderPreparing(){
+  const grid = $('#prepGrid');
+  grid.innerHTML = '';
+  const list = [...S.preparing].reverse();
+  const inWorkSum = S.preparing.reduce((s,o) => s + o.total, 0);
+  $('#prepEmpty').style.display = list.length ? 'none' : 'block';
+  $('#inWorkInfo').innerHTML = S.preparing.length
+    ? `в работе: <b>${S.preparing.length}</b> зак. на <b>${fmt(inWorkSum)}</b>`
+    : '';
+  list.forEach(o => {
+    const el = document.createElement('div');
+    el.className = 'pcard';
+    const itemsHtml = o.items.map(it =>
+      `<div class="pline">
+         <span class="nm">${it.qty} × ${it.name}</span>
+         <span class="pr"><b>${it.price*it.qty} ₽</b></span>
+       </div>
+       ${it.note ? `<div class="nt">📝 ${esc(it.note)}</div>` : ''}`
+    ).join('');
+    el.innerHTML = `
+      <div class="pcard-top">
+        <span class="pnum">№${o.num}</span>
+        <span class="pt">с ${fmtTime(o.sentAt)}</span>
+        <span class="grow"></span>
+        <span class="timer" data-sent="${o.sentAt}"></span>
+      </div>
+      <div class="pcard-top">
+        <select class="pay-sel" title="Вид оплаты">
+          <option${o.payment==='Наличные'?' selected':''}>Наличные</option>
+          <option${o.payment==='Терминал'?' selected':''}>Терминал</option>
+          <option${o.payment==='Перевод'?' selected':''}>Перевод</option>
+        </select>
+        <span class="grow"></span>
+      </div>
+      <div class="plist">${itemsHtml}</div>
+      <div class="ptotal"><span>ИТОГО</span><b>${fmt(o.total)}</b></div>
+      <div class="pbtns">
+        <button class="give">ОТДАНО ✓</button>
+        <button class="icon-btn edit" title="Вернуть в заказ и изменить">✏️</button>
+        <button class="icon-btn del" title="Отменить заказ">✕</button>
+      </div>`;
+    el.querySelector('.pay-sel').onchange = e => { o.payment = e.target.value; save(); };
+    el.querySelector('.give').onclick = () => completeOrder(o.num);
+    el.querySelector('.edit').onclick = () => returnToDraft(o.num);
+    el.querySelector('.del').onclick = () => cancelPreparing(o.num);
+    grid.appendChild(el);
+  });
+  updateTimers();
+}
+function updateTimers(){
+  document.querySelectorAll('.timer[data-sent]').forEach(t => {
+    const mins = (Date.now() - Number(t.dataset.sent)) / 60000;
+    t.textContent = '⏱ ' + elapsedText(Number(t.dataset.sent));
+    t.classList.toggle('warn', mins >= 10 && mins < 20);
+    t.classList.toggle('late', mins >= 20);
+  });
+}
+setInterval(updateTimers, 20000);
+
+function findPrep(num){ return S.preparing.findIndex(o => o.num === num); }
+
+function completeOrder(num){
+  const idx = findPrep(num); if(idx < 0) return;
+  const o = S.preparing[idx];
+  if(!o.payment){ toast('⚠️ Укажите вид оплаты!'); return; }
+  o.items.forEach(it => {
+    if(it.type === 'burger') S.burgerSales[it.id] = (S.burgerSales[it.id] || 0) + it.qty;
+    else S.extrasRevenue[it.cat] += it.price * it.qty;
+  });
+  S.completed.push({ ...o, time: fmtTime(o.sentAt), doneTs: Date.now(), doneTime: fmtTime(Date.now()) });
+  S.preparing.splice(idx, 1);
+  save(); renderAll();
+  toast(`✅ Заказ №${num} отдан — ${fmt(o.total)} · ${o.payment}`);
+}
+
+function returnToDraft(num){
+  const idx = findPrep(num); if(idx < 0) return;
+  if(Object.keys(S.current.items).length){
+    toast('⚠️ Сначала отправьте или очистите текущий заказ');
+    return;
+  }
+  const o = S.preparing[idx];
+  const items = {};
+  o.items.forEach(it => items[it.id] = { qty: it.qty, note: it.note || '' });
+  S.current = { num: o.num, items, payment: o.payment };
+  S.preparing.splice(idx, 1);
+  save(); renderAll();
+  toast(`✏️ Заказ №${num} возвращён в редактирование`);
+}
+
+function cancelPreparing(num){
+  const idx = findPrep(num); if(idx < 0) return;
+  if(confirm(`Отменить заказ №${num}? В статистику он не попадёт.`)){
+    S.preparing.splice(idx, 1);
+    save(); renderAll();
+    toast(`Заказ №${num} отменён`);
+  }
+}
+
+/* ================= ВЫПОЛНЕННЫЕ ================= */
+function renderCompleted(){
+  const tb = $('#doneTable tbody'); tb.innerHTML = '';
+  const list = S.completed.map((o, idx) => ({o, idx})).reverse();
+  $('#doneEmpty').style.display = list.length ? 'none' : 'block';
+  $('#doneTable').style.display = list.length ? 'table' : 'none';
+  list.forEach(({o, idx}) => {
+    const tr = document.createElement('tr');
+    const itemsHtml = o.items.map(it =>
+      `<div class="line-item">${it.qty} × ${it.name}${it.note ? ` <span class="nt">(${esc(it.note)})</span>` : ''} — ${it.price*it.qty} ₽</div>`
+    ).join('');
+    const timeCell = o.doneTime
+      ? `${o.time}<br><span class="tsub">отдан ${o.doneTime}</span>`
+      : o.time;
+    tr.innerHTML = `
+      <td><span class="num">#${o.num}</span></td>
+      <td>${timeCell}</td>
+      <td>${itemsHtml}</td>
+      <td><span class="pay-tag ${o.payment}">${o.payment}</span></td>
+      <td><span class="sum">${fmt(o.total)}</span></td>
+      <td><button class="del-order" title="Удалить заказ">✕</button></td>`;
+    tr.querySelector('.del-order').onclick = () => removeOrder(idx);
+    tb.appendChild(tr);
+  });
+}
+function removeOrder(idx){
+  const o = S.completed[idx];
+  if(!confirm(`Удалить заказ №${o.num}? Статистика смены будет пересчитана.`)) return;
+  o.items.forEach(it => {
+    if(it.type === 'burger'){
+      S.burgerSales[it.id] = (S.burgerSales[it.id] || 0) - it.qty;
+      if(S.burgerSales[it.id] <= 0) delete S.burgerSales[it.id];
+    } else S.extrasRevenue[it.cat] -= it.price * it.qty;
+  });
+  S.completed.splice(idx, 1);
+  save(); renderAll();
+  toast(`Заказ №${o.num} удалён`);
+}
+
+/* ================= СТАТИСТИКА ================= */
+function totals(){
+  const revenue = S.completed.reduce((s,o) => s + o.total, 0);
+  const byPay = {'Наличные':{sum:0,n:0}, 'Терминал':{sum:0,n:0}, 'Перевод':{sum:0,n:0}};
+  S.completed.forEach(o => { const p = byPay[o.payment]; if(p){ p.sum += o.total; p.n++; } });
+  const burgersCount = Object.values(S.burgerSales).reduce((s,n) => s + n, 0);
+  const inWorkSum = S.preparing.reduce((s,o) => s + o.total, 0);
+  return { revenue, byPay, burgersCount, inWorkSum };
+}
+function burgerSalesHtml(){
+  return Object.entries(S.burgerSales)
+    .map(([id,q]) => { const m = item(id); return m ? `${esc(m.short)} × ${q}` : ''; })
+    .filter(Boolean).join(' · ');
+}
+function renderStats(){
+  const { revenue, burgersCount } = totals();
+  const e = S.extrasRevenue;
+  $('#statCards').innerHTML = `
+    <div class="stat-card"><div class="v">${burgersCount}</div><div class="l">🍔 бургеров продано</div><div class="sub">${burgerSalesHtml() || 'пока 0'}</div></div>
+    <div class="stat-card"><div class="v">${fmt(revenue)}</div><div class="l">💰 выручка · отдано заказов: ${S.completed.length}</div></div>
+    <div class="stat-card"><div class="v">${fmt(e.fries)}</div><div class="l">🍟 фри и фрайс</div></div>
+    <div class="stat-card"><div class="v">${fmt(e.drink)}</div><div class="l">🥤 напитки и энергетики</div></div>
+    <div class="stat-card"><div class="v">${fmt(e.sauce)}</div><div class="l">🥣 соусы</div></div>`;
+}
+
+/* ================= ИТОГИ СМЕНЫ ================= */
+function openShiftModal(){
+  const { revenue, byPay, burgersCount, inWorkSum } = totals();
+  const e = S.extrasRevenue;
+  $('#shiftDate').textContent = new Date().toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  $('#shiftTotal').textContent = fmt(revenue);
+  $('#shiftGrid').innerHTML = `
+    <div class="shift-cell"><div class="v">${fmt(byPay['Наличные'].sum)}</div><div class="l">💵 Наличные · заказов: ${byPay['Наличные'].n}</div></div>
+    <div class="shift-cell"><div class="v">${fmt(byPay['Терминал'].sum)}</div><div class="l">💳 Терминал · заказов: ${byPay['Терминал'].n}</div></div>
+    <div class="shift-cell"><div class="v">${fmt(byPay['Перевод'].sum)}</div><div class="l">📱 Перевод · заказов: ${byPay['Перевод'].n}</div></div>
+    <div class="shift-cell"><div class="v">${S.completed.length}</div><div class="l">🧾 заказов отдано</div></div>
+    <div class="shift-cell full"><div class="v">${burgersCount}</div><div class="l">🍔 бургеров продано</div><div class="sub">${burgerSalesHtml() || '—'}</div></div>
+    <div class="shift-cell"><div class="v">${fmt(e.fries)}</div><div class="l">🍟 фри и фрайс</div></div>
+    <div class="shift-cell"><div class="v">${fmt(e.drink)}</div><div class="l">🥤 напитки и энергетики</div></div>
+    <div class="shift-cell"><div class="v">${fmt(e.sauce)}</div><div class="l">🥣 соусы</div></div>
+    ${S.preparing.length ? `<div class="shift-cell full"><div class="v">${S.preparing.length} зак. на ${fmt(inWorkSum)}</div><div class="l">🔥 ещё готовятся — в сумму не входят</div></div>` : ''}`;
+  $('#archiveBox').classList.remove('open');
+  $('#modalBack').classList.add('open');
+}
+ $('#endShiftBtn').onclick = openShiftModal;
+ $('#sumBtn').onclick = openShiftModal;
+ $('#closeModalBtn').onclick = () => $('#modalBack').classList.remove('open');
+ $('#modalBack').addEventListener('click', e => { if(e.target === $('#modalBack')) $('#modalBack').classList.remove('open'); });
+ $('#printBtn').onclick = () => window.print();
+
+/* ---------- Архив смен ---------- */
+ $('#archiveBtn').onclick = () => {
+  const box = $('#archiveBox');
+  box.classList.toggle('open');
+  if(box.classList.contains('open')) renderArchive();
+};
+function renderArchive(){
+  const box = $('#archiveList');
+  if(!ARC.length){ box.innerHTML = '<div class="empty">Архив пуст — завершённых смен пока нет</div>'; return; }
+  box.innerHTML = '';
+  [...ARC].reverse().forEach((sh, ri) => {
+    const i = ARC.length - 1 - ri;
+    const div = document.createElement('div'); div.className = 'arc-item';
+    div.innerHTML = `
+      <div>
+        <b>${esc(sh.date)}</b> · ${sh.orders} зак. · 🍔 ${sh.burgers}
+        <span class="tsub">нал. ${sh.byPay['Наличные'].sum.toLocaleString('ru-RU')} · терм. ${sh.byPay['Терминал'].sum.toLocaleString('ru-RU')} · перев. ${sh.byPay['Перевод'].sum.toLocaleString('ru-RU')} ₽</span>
+      </div>
+      <div style="text-align:right">
+        <span class="num">${fmt(sh.revenue)}</span><br>
+        <button class="mini-btn del-arc">удалить</button>
+      </div>`;
+    div.querySelector('.del-arc').onclick = () => {
+      if(confirm(`Удалить запись о смене от ${sh.date}?`)){
+        ARC.splice(i, 1); saveArchive(); renderArchive();
+      }
+    };
+    box.appendChild(div);
+  });
+}
+
+/* ---------- Новая смена (с архивированием) ---------- */
+ $('#newShiftBtn').onclick = () => {
+  if(!confirm('Завершить смену? Текущие данные уйдут в архив, и начнётся новая смена.')) return;
+  const t = totals(); const e = S.extrasRevenue;
+  ARC.push({
+    endedAt: Date.now(),
+    date: new Date().toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'}),
+    revenue: t.revenue, orders: S.completed.length,
+    burgers: t.burgersCount, burgerSales: {...S.burgerSales},
+    fries: e.fries, drink: e.drink, sauce: e.sauce,
+    byPay: JSON.parse(JSON.stringify(t.byPay))
+  });
+  if(ARC.length > 60) ARC = ARC.slice(-60); // храним последние 60 смен
+  saveArchive();
+  S = defaultState();
+  save(); renderAll();
+  $('#modalBack').classList.remove('open');
+  toast(`🧹 Смена завершена и сохранена в архив. Новая смена начата!`);
+};
+
+/* ================= БЭКАП: ЭКСПОРТ / ИМПОРТ ================= */
+ $('#exportBtn').onclick = () => {
+  const payload = { app:'tot-burger-cash', version:1, exportedAt:new Date().toISOString(), state:S };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  const d = new Date(), pad = n => String(n).padStart(2,'0');
+  a.href = URL.createObjectURL(blob);
+  a.download = `tot-burger-${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('💾 Бэкап скачан — сохраните файл');
+};
+
+ $('#importBtn').onclick = () => $('#importFile').click();
+ $('#importFile').addEventListener('change', e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const data = JSON.parse(r.result);
+      const st = (data && data.app === 'tot-burger-cash') ? data.state : data;
+      if(!st || typeof st !== 'object' || !('completed' in st) || !('preparing' in st)) throw new Error('bad format');
+      if(!confirm('Восстановить смену из файла? Текущие данные будут заменены.')) return;
+      S = Object.assign(defaultState(), st);
+      save(); renderAll();
+      toast('📂 Смена восстановлена из бэкапа');
+    }catch(err){
+      alert('Не удалось прочитать файл. Убедитесь, что это файл бэкапа этой кассы (.json).');
+    }
+    e.target.value = '';
+  };
+  r.readAsText(f);
+});
+
+/* ================= ЧАСЫ И ДАТА ================= */
+function tickClock(){
+  const n = new Date();
+  $('#dateLine').textContent = n.toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  $('#timeLine').textContent = n.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+}
+setInterval(tickClock, 1000); tickClock();
+
+/* ================= СТАРТ ================= */
+function renderAll(){
+  renderOrder();
+  renderPreparing();
+  renderCompleted();
+  renderStats();
+  $('#pillPrep').textContent = S.preparing.length;
+  $('#pillDone').textContent = S.completed.length;
+}
+buildMenu(); renderAll(); updateSaveInd(true);
+
+if(loadState()){
+  toast('📂 Смена восстановлена — все заказы на месте');
+}
+</script>
+</body>
+</html>

@@ -379,7 +379,7 @@ tr:last-child td{border-bottom:none}
   <!-- ГОТОВЯТСЯ -->
   <section class="panel">
     <div class="prep-head-row">
-      <h2 class="sec-title" style="margin:0">🔥 ГОТОВЯТСЯ <span class="hint">— нажми «ОТДАНО ✓», когда отдал бургеры клиенту</span></h2>
+      <h2 class="sec-title" style="margin:0">🔥 ГОТОВЯТСЯ <span class="hint">— заказы слева направо: готовь по очереди · «ОТДАНО ✓», когда отдал</span></h2>
       <div class="inwork" id="inWorkInfo"></div>
     </div>
     <div class="prep-grid" id="prepGrid"></div>
@@ -388,7 +388,7 @@ tr:last-child td{border-bottom:none}
 
   <!-- ВЫПОЛНЕННЫЕ -->
   <section class="panel">
-    <h2 class="sec-title">✅ ВЫПОЛНЕННЫЕ ЗАКАЗЫ</h2>
+    <h2 class="sec-title">✅ ВЫПОЛНЕННЫЕ ЗАКАЗЫ <span class="hint">— сверху вниз по возрастанию</span></h2>
     <div style="overflow-x:auto">
       <table id="doneTable" style="display:none">
         <thead><tr><th>№</th><th>Время</th><th>Состав</th><th>Оплата</th><th>Сумма</th><th></th></tr></thead>
@@ -583,7 +583,7 @@ function loadOrd(){
     if(o && typeof o === 'object'){
       // миграция старых объединённых позиций
       const M = {
-        'p_Перчатки раб/клиент':   ['p_Перчатки рабочие'],
+        'p_Перчатки раб/клиент':     ['p_Перчатки рабочие'],
         'p_Упаковка фрайс/картошки': ['p_Упаковка фрайс','p_Упаковка картошки']
       };
       if(!o.selected) o.selected = {};
@@ -838,7 +838,7 @@ function cancelDraft(){
 function renderPreparing(){
   const grid = $('#prepGrid');
   grid.innerHTML = '';
-  const list = [...S.preparing].reverse();
+  const list = [...S.preparing].sort((a,b) => a.num - b.num); // по возрастанию: №1 слева
   const inWorkSum = S.preparing.reduce((s,o) => s + o.total, 0);
   $('#prepEmpty').style.display = list.length ? 'none' : 'block';
   $('#inWorkInfo').innerHTML = S.preparing.length
@@ -937,7 +937,7 @@ function cancelPreparing(num){
 /* ================= ВЫПОЛНЕННЫЕ ================= */
 function renderCompleted(){
   const tb = $('#doneTable tbody'); tb.innerHTML = '';
-  const list = S.completed.map((o, idx) => ({o, idx})).reverse();
+  const list = S.completed.map((o, idx) => ({o, idx})); // по возрастанию: №1 сверху
   $('#doneEmpty').style.display = list.length ? 'none' : 'block';
   $('#doneTable').style.display = list.length ? 'table' : 'none';
   list.forEach(({o, idx}) => {
@@ -1064,7 +1064,7 @@ function renderArchive(){
   const t = totals(); const e = S.extrasRevenue;
   ARC.push({
     endedAt: Date.now(),
-    date: fmtDate(new Date(S.startedAt)),
+    date: fmtDate(new Date(S.startedAt)),   // дата смены, а не момент закрытия (важно после полуночи)
     branch: S.branch,
     revenue: t.revenue, orders: S.completed.length,
     burgers: t.burgersCount, burgerSales: {...S.burgerSales},
@@ -1087,7 +1087,7 @@ let lastReportText = '';
 
 function buildReportData(){
   let counter = 0;
-  const orders = S.completed.map(o => {
+  const orders = [...S.completed].sort((a,b) => a.num - b.num).map(o => { // по возрастанию: №1 сверху
     const burgers = [], extras = [];
     o.items.forEach(it => {
       if(it.type === 'burger'){

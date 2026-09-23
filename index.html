@@ -23,7 +23,7 @@ body{
 }
 button{font-family:inherit}
 
-/* ---------- Шапка ---------- */
+/* ---------- Шапка (десктоп — сверху) ---------- */
 header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:16px;
   padding:12px 22px;background:rgba(14,12,10,.94);backdrop-filter:blur(6px);border-bottom:2px solid var(--orange)}
 .brand{font-weight:900;font-size:22px;letter-spacing:.5px;display:flex;align-items:center;gap:10px;white-space:nowrap}
@@ -40,6 +40,7 @@ header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-betwe
 .save-ind.err .dot{background:#ff5d5d;box-shadow:0 0 8px #ff5d5d}
 .clock{text-align:right;line-height:1.25}
 .clock .d{text-transform:capitalize;font-size:12px;color:var(--muted)}
+.clock .dshort{display:none;font-size:10px;color:var(--muted);font-weight:700}
 .clock .t{font-size:18px;font-weight:800}
 .btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;transition:.15s}
 .btn:hover{border-color:var(--orange);color:var(--orange2)}
@@ -59,8 +60,8 @@ header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-betwe
 
 /* ---------- Карточки меню ---------- */
 .grid{display:grid;gap:12px}
-.burgers{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
-.extras{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.burgers{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+.extras{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
 .card{position:relative;background:linear-gradient(180deg,#292219,#1c1815);border:1px solid var(--line);border-radius:16px;
   padding:16px 12px 14px;text-align:center;cursor:pointer;user-select:none;overflow:hidden;transition:transform .12s,border-color .12s,box-shadow .12s}
 .card:hover{transform:translateY(-2px);border-color:var(--orange);box-shadow:0 10px 26px rgba(255,122,0,.14)}
@@ -124,7 +125,7 @@ header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-betwe
 .prep-head-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .inwork{font-size:13px;color:var(--muted);font-weight:700}
 .inwork b{color:var(--orange2)}
-.prep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px;margin-top:14px}
+.prep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:14px}
 .pcard{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
 .pcard-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .pnum{font-size:20px;font-weight:900;color:var(--orange2);white-space:nowrap}
@@ -167,7 +168,7 @@ tr:last-child td{border-bottom:none}
 .pay-tag.Перевод{color:#ffd58f;border-color:#7a5a2f}
 .del-order{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;width:26px;height:26px;cursor:pointer;font-size:13px;line-height:1}
 .del-order:hover{color:#ff8877;border-color:#7a2a20}
-.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
 .stat-card{background:#211c16;border:1px solid var(--line);border-radius:14px;padding:14px}
 .stat-card .v{font-size:22px;font-weight:900;color:var(--orange2)}
 .stat-card .l{font-size:12px;color:var(--muted);font-weight:700;margin-top:2px}
@@ -202,10 +203,32 @@ tr:last-child td{border-bottom:none}
   box-shadow:0 10px 30px rgba(0,0,0,.5);transition:transform .3s;z-index:200;max-width:90vw;text-align:center}
 #toast.show{transform:translateX(-50%) translateY(0)}
 
+/* =========================================================
+   ТЕЛЕФОН / ПЛАНШЕТ: шапка уходит вниз экрана
+   ========================================================= */
 @media(max-width:1080px){
   .layout{grid-template-columns:1fr}
   .order-panel{position:static;max-height:none}
   .shift-grid{grid-template-columns:1fr}
+
+  body{padding-bottom:96px} /* место под нижнюю панель */
+  header{
+    position:fixed;top:auto;bottom:0;left:0;right:0;z-index:60;
+    justify-content:center;gap:7px;flex-wrap:wrap;
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+    border-bottom:none;border-top:2px solid var(--orange);
+    background:rgba(14,12,10,.97);
+  }
+  .brand{display:none}
+  .save-ind{font-size:0;gap:0;padding:9px 9px} /* остаётся только зелёная точка */
+  .pill{padding:6px 9px}
+  .clock{text-align:center;line-height:1.2}
+  .clock .d{display:none}
+  .clock .dshort{display:block}
+  .clock .t{font-size:15px}
+  .btn{padding:9px 11px;border-radius:10px;font-size:16px}
+  .btn .btn-txt{display:none} /* только иконки */
+  #toast{bottom:110px}
 }
 @media print{
   body *{visibility:hidden}
@@ -226,10 +249,14 @@ tr:last-child td{border-bottom:none}
     <span class="save-ind" id="saveInd" title="Данные автоматически сохраняются"><span class="dot"></span>…</span>
     <span class="pill fire" title="Заказы на кухне">🔥 <b id="pillPrep">0</b></span>
     <span class="pill ok" title="Выполнено за смену">✅ <b id="pillDone">0</b></span>
-    <div class="clock"><div class="d" id="dateLine">—</div><div class="t" id="timeLine">—</div></div>
-    <button class="btn" id="exportBtn" title="Скачать резервную копию смены на устройство">💾 Бэкап</button>
-    <button class="btn" id="importBtn" title="Восстановить смену из файла бэкапа">📂 Восстановить</button>
-    <button class="btn" id="endShiftBtn">📊 Итоги смены</button>
+    <div class="clock">
+      <div class="d" id="dateLine">—</div>
+      <div class="dshort" id="dateShort">—</div>
+      <div class="t" id="timeLine">—</div>
+    </div>
+    <button class="btn" id="exportBtn" title="Скачать бэкап смены">💾<span class="btn-txt"> Бэкап</span></button>
+    <button class="btn" id="importBtn" title="Восстановить из файла бэкапа">📂<span class="btn-txt"> Восстановить</span></button>
+    <button class="btn" id="endShiftBtn" title="Итоги смены">📊<span class="btn-txt"> Итоги смены</span></button>
   </div>
 </header>
 <input type="file" id="importFile" accept=".json,application/json" hidden>
@@ -338,7 +365,7 @@ tr:last-child td{border-bottom:none}
 <script>
 'use strict';
 const LS_KEY      = 'tot-burger-cash-v1';
-const LS_BACKUP   = 'tot-burger-cash-backup-v1'; // страховочная копия
+const LS_BACKUP   = 'tot-burger-cash-backup-v1';
 const ARC_KEY     = 'tot-burger-archive-v1';
 
 /* ================= МЕНЮ ================= */
@@ -368,16 +395,15 @@ const MENU = [
 function defaultState(){
   return {
     orderSeq: 1,
-    lastSaved: null,                                 // время последнего сохранения
-    current: { num:null, items:{}, payment:null },   // черновик
-    preparing: [],                                   // 🔥 на кухне
-    completed: [],                                   // ✅ отдано
+    lastSaved: null,
+    current: { num:null, items:{}, payment:null },
+    preparing: [],
+    completed: [],
     burgerSales: {},
     extrasRevenue: { fries:0, drink:0, sauce:0 }
   };
 }
 function loadState(){
-  // пробуем основное хранилище, при сбое — страховочную копию
   for(const key of [LS_KEY, LS_BACKUP]){
     try{
       const raw = localStorage.getItem(key);
@@ -399,7 +425,7 @@ function save(){
   updateSaveInd(ok);
 }
 
-/* ---- Архив смен (переживает "новую смену") ---- */
+/* ---- Архив смен ---- */
 function loadArchive(){ try{ return JSON.parse(localStorage.getItem(ARC_KEY) || '[]'); }catch(e){ return []; } }
 function saveArchive(){ try{ localStorage.setItem(ARC_KEY, JSON.stringify(ARC)); }catch(e){} }
 let ARC = loadArchive();
@@ -428,17 +454,16 @@ function updateSaveInd(ok = true){
   el.classList.toggle('err', !ok);
   if(!ok){
     el.innerHTML = '<span class="dot"></span>ОШИБКА СОХРАНЕНИЯ';
-    el.title = 'Браузер не даёт записать данные (нет места или запрет хранилища). Скачайте бэкап!';
+    el.title = 'Браузер не даёт записать данные. Скачайте бэкап!';
     return;
   }
   if(S.lastSaved){
     el.innerHTML = '<span class="dot"></span>сохранено ' + fmtTime(S.lastSaved);
-    el.title = 'Все заказы автоматически сохраняются в этом браузере';
+    el.title = 'Все заказы автоматически сохраняются в этом браузере (последнее сохранение ' + fmtTime(S.lastSaved) + ')';
   } else {
     el.innerHTML = '<span class="dot"></span>автосохранение';
   }
 }
-// страховка: дожимаем сохранение при закрытии/сворачивании вкладки
 window.addEventListener('beforeunload', () => { try{ save(); }catch(e){} });
 document.addEventListener('visibilitychange', () => { if(document.hidden){ try{ save(); }catch(e){} } });
 
@@ -821,7 +846,7 @@ function renderArchive(){
     fries: e.fries, drink: e.drink, sauce: e.sauce,
     byPay: JSON.parse(JSON.stringify(t.byPay))
   });
-  if(ARC.length > 60) ARC = ARC.slice(-60); // храним последние 60 смен
+  if(ARC.length > 60) ARC = ARC.slice(-60);
   saveArchive();
   S = defaultState();
   save(); renderAll();
@@ -867,6 +892,7 @@ function renderArchive(){
 function tickClock(){
   const n = new Date();
   $('#dateLine').textContent = n.toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  $('#dateShort').textContent = n.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'});
   $('#timeLine').textContent = n.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
 }
 setInterval(tickClock, 1000); tickClock();

@@ -46,6 +46,8 @@ header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-betwe
 .btn:hover{border-color:var(--orange);color:var(--orange2)}
 .btn.primary{background:linear-gradient(180deg,#ff8c1a,#ff6400);border:none;color:#fff;box-shadow:0 4px 14px rgba(255,106,0,.35)}
 .btn.primary:hover{color:#fff;filter:brightness(1.07)}
+.btn.green{background:linear-gradient(180deg,#2fae57,#1f8a42);border:none;color:#fff;box-shadow:0 4px 14px rgba(30,160,80,.3)}
+.btn.green:hover{color:#fff;filter:brightness(1.08)}
 .btn.danger{background:#3a1410;border-color:#7a2a20;color:#ff8877}
 
 /* ---------- Раскладка ---------- */
@@ -175,8 +177,9 @@ tr:last-child td{border-bottom:none}
 .stat-card .sub{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.55;border-top:1px dashed #3a3128;padding-top:8px}
 .shift-btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;flex-wrap:wrap}
 .storage-note{font-size:11.5px;color:var(--muted);line-height:1.5}
+.stat-actions{display:flex;gap:10px;flex-wrap:wrap}
 
-/* ---------- Модалка итогов ---------- */
+/* ---------- Модалки ---------- */
 .modal-back{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
 .modal-back.open{display:flex}
 .modal{background:linear-gradient(180deg,#241e17,#1a1611);border:1px solid #4a4034;border-radius:20px;max-width:620px;width:100%;max-height:88vh;overflow:auto;padding:24px}
@@ -198,8 +201,12 @@ tr:last-child td{border-bottom:none}
 .arc-item{background:#211c16;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
 .arc-item .tsub{display:block;margin-top:3px}
 
+/* ---------- Отчёт ---------- */
+.report-wrap{background:#120f0c;border:1px solid var(--line);border-radius:12px;padding:14px;max-height:46vh;overflow:auto}
+#reportText{font-family:'Consolas','Menlo','Courier New',monospace;font-size:12.5px;line-height:1.55;white-space:pre-wrap;color:#e8ddcd;margin:0}
+.report-hint{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+
 /* ---------- Уведомление (toast) ---------- */
-/* Скрывается надёжно: уезжает И растворяется (opacity + visibility) */
 #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(150px);
   background:linear-gradient(180deg,#ff9424,#ff6400);color:#fff;font-weight:800;padding:13px 22px;border-radius:14px;
   box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:300;max-width:90vw;text-align:center;
@@ -243,6 +250,8 @@ tr:last-child td{border-bottom:none}
   .shift-hero{background:none;border:2px solid #000;box-shadow:none}
   .shift-hero .v,.shift-cell .v{color:#000}
   .modal-actions,#archiveBox{display:none!important}
+  #reportText{color:#000!important}
+  .report-wrap{border:1px solid #000;max-height:none}
 }
 </style>
 </head>
@@ -337,7 +346,10 @@ tr:last-child td{border-bottom:none}
     <div class="stat-cards" id="statCards"></div>
     <div class="shift-btn-row">
       <div class="storage-note">💾 Данные хранятся в этом браузере и не пропадут при закрытии сайта.<br>Для страховки (или переноса на другое устройство) — кнопка «💾 Бэкап».</div>
-      <button class="btn primary" id="sumBtn">💰 Сформировать общую сумму продаж</button>
+      <div class="stat-actions">
+        <button class="btn green" id="reportBtn">📋 Отчёт для отправки</button>
+        <button class="btn primary" id="sumBtn">💰 Сформировать общую сумму продаж</button>
+      </div>
     </div>
   </section>
 </div>
@@ -357,10 +369,27 @@ tr:last-child td{border-bottom:none}
       <div id="archiveList"></div>
     </div>
     <div class="modal-actions">
+      <button class="btn green" id="reportBtn2">📋 Отчёт для отправки</button>
       <button class="btn" id="archiveBtn">📚 Архив смен</button>
       <button class="btn" id="printBtn">🖨 Печать</button>
       <button class="btn danger" id="newShiftBtn">🧹 Новая смена (текущая уйдёт в архив)</button>
       <button class="btn" id="closeModalBtn">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- ОТЧЁТ ПО ПРОДАЖАМ -->
+<div class="modal-back" id="reportBack">
+  <div class="modal">
+    <h2>📋 Отчёт по продажам</h2>
+    <div class="mdate" id="reportDate"></div>
+    <div class="report-wrap"><pre id="reportText"></pre></div>
+    <div class="report-hint">💡 «Скопировать» → вставь текст в WhatsApp / Telegram руководителю. На телефоне можно жать «Поделиться» — откроется меню отправки.</div>
+    <div class="modal-actions">
+      <button class="btn green" id="reportCopyBtn">📋 Скопировать</button>
+      <button class="btn" id="reportShareBtn">📤 Поделиться</button>
+      <button class="btn" id="reportPrintBtn">🖨 Печать</button>
+      <button class="btn" id="reportCloseBtn">Закрыть</button>
     </div>
   </div>
 </div>
@@ -400,6 +429,7 @@ const MENU = [
 function defaultState(){
   return {
     orderSeq: 1,
+    startedAt: Date.now(),                           // открытие смены
     lastSaved: null,
     current: { num:null, items:{}, payment:null },
     preparing: [],
@@ -441,6 +471,7 @@ const item = id => MENU.find(m => m.id === id);
 const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtTime = ts => new Date(ts).toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+const rub = n => n.toLocaleString('ru-RU') + ' ₽';
 let toastTimer;
 function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
@@ -858,6 +889,121 @@ function renderArchive(){
   save(); renderAll();
   $('#modalBack').classList.remove('open');
   toast(`🧹 Смена завершена и сохранена в архив. Новая смена начата!`);
+};
+
+/* ================= ОТЧЁТ ПО ПРОДАЖАМ ================= */
+const PAY_ICON = {'Наличные':'💵', 'Терминал':'💳', 'Перевод':'📱'};
+
+function buildReport(){
+  const t = totals();
+  const e = S.extrasRevenue;
+  const now = new Date();
+  const L = [];
+  const DIV  = '─────────────────────';
+  const DIV2 = '═════════════════════';
+
+  L.push('🔥 ТОТ БУРГЕР — ОТЧЁТ ПО ПРОДАЖАМ');
+  L.push('📅 ' + now.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'}) +
+         ' (' + now.toLocaleDateString('ru-RU', {weekday:'long'}) + ')');
+  if(S.startedAt) L.push('⏰ Смена открыта: ' + fmtTime(S.startedAt));
+  L.push('🕒 Отчёт сформирован: ' + fmtTime(Date.now()));
+  L.push(DIV);
+
+  // --- Заказы ---
+  if(S.completed.length){
+    L.push(`🧾 ЗАКАЗЫ (${S.completed.length}):`);
+    S.completed.forEach(o => {
+      L.push(`#${o.num} · ${o.time} · ${PAY_ICON[o.payment] || ''} ${o.payment} — ${rub(o.total)}`);
+      o.items.forEach(it => {
+        L.push(`    • ${it.qty} × ${it.name} — ${rub(it.price * it.qty)}${it.note ? ` (${it.note})` : ''}`);
+      });
+    });
+  } else {
+    L.push('🧾 Заказов за смену нет');
+  }
+  L.push(DIV);
+
+  // --- Бургеры (штуки) ---
+  L.push(`🍔 БУРГЕРЫ ПРОДАНО: ${t.burgersCount} шт`);
+  const bEntries = Object.entries(S.burgerSales);
+  if(bEntries.length){
+    bEntries.forEach(([id, q]) => {
+      const m = item(id);
+      if(m) L.push(`    • ${m.name} — ${q} шт × ${m.price} ₽ = ${rub(q * m.price)}`);
+    });
+  } else {
+    L.push('    —');
+  }
+  L.push(DIV);
+
+  // --- Остальное (деньги) ---
+  L.push('🍟 Фри и фрайс: ' + rub(e.fries));
+  L.push('🥤 Напитки и энергетики: ' + rub(e.drink));
+  L.push('🥣 Соусы: ' + rub(e.sauce));
+  L.push(DIV);
+
+  // --- Оплата ---
+  L.push('💳 ОПЛАТА:');
+  L.push(`    💵 Наличные — ${rub(t.byPay['Наличные'].sum)} (${t.byPay['Наличные'].n} зак.)`);
+  L.push(`    💳 Терминал — ${rub(t.byPay['Терминал'].sum)} (${t.byPay['Терминал'].n} зак.)`);
+  L.push(`    📱 Перевод — ${rub(t.byPay['Перевод'].sum)} (${t.byPay['Перевод'].n} зак.)`);
+
+  // --- В работе ---
+  if(S.preparing.length){
+    L.push(DIV);
+    L.push(`🔥 Ещё в работе: ${S.preparing.length} зак. на ${rub(t.inWorkSum)} (в итог не входят)`);
+  }
+
+  // --- ИТОГ ---
+  L.push(DIV2);
+  L.push('💰 ИТОГО ЗА СМЕНУ: ' + rub(t.revenue));
+  L.push(`🧾 Заказов: ${S.completed.length} · 🍔 Бургеров: ${t.burgersCount} шт`);
+
+  return L.join('\n');
+}
+
+function openReport(){
+  $('#reportDate').textContent = new Date().toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  $('#reportText').textContent = buildReport();
+  $('#modalBack').classList.remove('open');
+  $('#reportBack').classList.add('open');
+}
+ $('#reportBtn').onclick = openReport;
+ $('#reportBtn2').onclick = openReport;
+ $('#reportCloseBtn').onclick = () => $('#reportBack').classList.remove('open');
+ $('#reportBack').addEventListener('click', e => { if(e.target === $('#reportBack')) $('#reportBack').classList.remove('open'); });
+ $('#reportPrintBtn').onclick = () => window.print();
+
+ $('#reportCopyBtn').onclick = async () => {
+  const text = $('#reportText').textContent;
+  try{
+    await navigator.clipboard.writeText(text);
+    toast('📋 Отчёт скопирован — вставь в чат');
+  }catch(err){
+    // запасной способ для старых браузеров
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      toast('📋 Отчёт скопирован — вставь в чат');
+    }catch(e2){
+      toast('⚠️ Не скопировалось — выдели текст вручную');
+    }
+  }
+};
+
+ $('#reportShareBtn').onclick = async () => {
+  const text = $('#reportText').textContent;
+  if(navigator.share){
+    try{ await navigator.share({ title:'Отчёт по продажам — ТОТ БУРГЕР', text }); }
+    catch(err){ /* пользователь отменил — молча */ }
+  } else {
+    $('#reportCopyBtn').click();
+  }
 };
 
 /* ================= БЭКАП: ЭКСПОРТ / ИМПОРТ ================= */
